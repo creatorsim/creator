@@ -60,7 +60,7 @@
                              file = files[i];
                              reader = new FileReader();
                              reader.onloadend = onFileLoaded;
-                             reader.readAsBinaryString(file);
+                             reader.readAsText(file);
                         }
 
                         function onFileLoaded(event) {
