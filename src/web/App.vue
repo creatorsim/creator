@@ -53,6 +53,8 @@ import MobileInstructionsView from "./components/mobile/MobileInstructionsView.v
 import MobileDataView from "./components/mobile/MobileDataView.vue";
 import MobileArchitectureView from "./components/mobile/MobileArchitectureView.vue";
 
+import ActivityBar from "./components/general/ActivityBar.vue";
+
 import SelectArchitecture from "./components/SelectArchitecture.vue";
 import ArchitectureView from "./components/ArchitectureView.vue";
 import SimulatorView from "./components/SimulatorView.vue";
@@ -94,6 +96,7 @@ export default {
     ArchitectureView,
     SimulatorView,
     AssemblyView,
+    ActivityBar,
   },
 
   /************
@@ -218,6 +221,10 @@ export default {
       vim_custom_keybinds:
         JSON.parse(localStorage.getItem("conf_vim_custom_keybinds")!) || [],
 
+      sidebar_mode: (a => {
+        return a === null ? "show" : a;
+      })(localStorage.getItem("conf_sidebar_mode")) as "show" | "autohide" | "disable",
+
       /*************************/
       /* Architecture Selector */
       /*************************/
@@ -333,6 +340,10 @@ export default {
      */
     isMobile() {
       return this.windowWidth <= 767;
+    },
+
+    showActivityBar(): boolean {
+      return ["architecture", "assembly", "simulator"].includes(this.creator_mode);
     },
   },
 
@@ -638,7 +649,8 @@ export default {
   <!-- Browser not supported modal -->
   <SupportedBrowsers :browser="browser" />
 
-  <header>
+  <div class="app-wrapper">
+    <header>
     <!-- Navbar  -->
     <NavbarCREATOR
       :version="version"
@@ -670,6 +682,7 @@ export default {
       v-model:vim_mode="vim_mode"
       v-model:reg_name_representation="reg_name_representation"
       v-model:interrupt_handler="interrupt_handler"
+      v-model:sidebar_mode="sidebar_mode"
     />
 
     <!-- Information modals -->
@@ -689,6 +702,14 @@ export default {
     <!-- Backup modal -->
     <UIeltoBackup id="copy" @load-architecture="creator_mode = 'assembly'" />
   </header>
+  <div class="app-body">
+    <ActivityBar
+      v-if="!isMobile && showActivityBar && sidebar_mode !== 'disable'"
+      v-model="creator_mode"
+      :dark="dark"
+      :autohide="sidebar_mode === 'autohide'"
+    />
+  <main class="main-view">
 
   <!-------------------->
   <!-- Mobile Architecture Select -->
@@ -796,6 +817,9 @@ export default {
     :target_location="target_location"
     :flash_url="flash_url"
   />
+    </main>
+    </div>
+  </div>
 
   <!-------------------->
   <!-- Mobile Settings -->
@@ -1050,6 +1074,29 @@ export default {
 
   .fields {
     padding: 1%;
+  }
+  .app-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .app-body {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .main-view {
+    flex-grow: 1;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
