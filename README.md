@@ -116,6 +116,29 @@
   <h2 align="center">Publications</h2>
 </div>
 
+### 2026
+
+<details>
+<summary>:newspaper: CREATOR-Sail: A RISC-V web simulator based on Sail ISA specification</summary>
+
+  * Journal paper: Journal of Systems Architecture
+  * Authors: Juan Carlos Cano-Resa, Félix García-Carballeira, Diego Camarmas-Alonso, Alejandro Calderón-Mateos
+  * [:link: Open publication](https://doi.org/10.1016/j.sysarc.2026.103809)
+  ```bibtex
+  @article{CANORESA2026103809,
+    title    = {CREATOR-Sail: A RISC-V web simulator based on Sail ISA specification},
+    journal  = {Journal of Systems Architecture},
+    pages    = {103809},
+    year     = {2026},
+    issn     = {1383-7621},
+    doi      = {https://doi.org/10.1016/j.sysarc.2026.103809},
+    url      = {https://www.sciencedirect.com/science/article/pii/S138376212600127X},
+    author   = {Juan Carlos Cano-Resa and Felix Garcia-Carballeira and Diego Camarmas-Alonso and Alejandro Calderon-Mateos},
+    keywords = {RISC-V, Sail, Web simulator, Extensible simulator, Instruction set architecture},
+  }
+  ```
+</details>
+
 ### 2025
 
 <details>
@@ -232,6 +255,7 @@
   * [:link: Open publication](https://doi.org/10.5281/zenodo.8378899)
   ```bibtex
   @proceedings{diego_camarmas_alonso_2023_8378899,
+    author    = {Diego Camarmas-Alonso and Felix Garcia-Carballeira and Alejandro Calderon-Mateos and Elías Del-Pozo-Puñal},
     title     = {{Integración del simulador CREATOR con hardware RISC-V: caso de estudio con microcontrolador ESP32}},
     year      = 2023,
     publisher = {Zenodo},
@@ -280,6 +304,7 @@
   * [:link: Open publication](http://doi.org/10.5281/zenodo.5130302)
   ```bibtex
   @proceedings{diego_camarmas_alonso_2021_5130302,
+    author    = {Diego Camarmas-Alonso and Felix Garcia-Carballeira and Alejandro Calderon-Mateos and Elías Del-Pozo-Puñal},
     title     = {{CREATOR: Simulador didáctico y genérico para la programación en ensamblador}},
     year      = 2021,
     publisher = {Zenodo},
