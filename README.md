@@ -128,6 +128,7 @@
   @article{CANORESA2026103809,
     title    = {CREATOR-Sail: A RISC-V web simulator based on Sail ISA specification},
     journal  = {Journal of Systems Architecture},
+    volume   = {176},
     pages    = {103809},
     year     = {2026},
     issn     = {1383-7621},
