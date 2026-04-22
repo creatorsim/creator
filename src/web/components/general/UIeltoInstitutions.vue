@@ -65,7 +65,7 @@ export default defineComponent({
       <b-row cols="3" class="text-center" align-v="center">
         <b-col cols="4"></b-col>
         <b-col cols="4">
-          <a target="_blank" href="https://www.upm.es/">
+          <a target="_blank" href="https://www.etsiinf.upm.es/">
             <img
               alt="Universidad Politecnica de Madrid Logo"
               class="p-0"
