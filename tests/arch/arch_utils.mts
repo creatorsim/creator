@@ -128,7 +128,7 @@ export function execution_tests(
             .map(d => [d.addr, d.value])
             .filter(x => x[1] !== 0);
 
-        const registers = creator.REGISTERS.flatMap(r => r.elements)
+        const registers = creator.REGISTERS.flatMap(r => r.registers)
             .filter(r => r.value !== r.default_value)
             .map(r => [r.name.join(","), "0x" + r.value.toString(16)]);
 

@@ -262,7 +262,7 @@ export const coreEvents = mitt()
    
    export function updateSomeData(indexComp, indexElem) {
        // ... update your data ...
-       data[indexComp].elements[indexElem].value = newValue
+       data[indexComp].registers[indexElem].value = newValue
        
        // Notify UI layers (CLI ignores, web UI listens)
        coreEvents.emit("data-updated", { indexComp, indexElem })

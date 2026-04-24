@@ -49,11 +49,11 @@ extensions:
     description: "RV32/RV64 Privileged instructions"
     type: extension
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - pc
         nbits: 32
@@ -149,9 +149,9 @@ components:
           - write
 
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - x0
           - zero
@@ -490,9 +490,9 @@ components:
           - write
 
   - name: Floating point registers
-    type: fp_registers
+    type: float
     double_precision: true
-    elements:
+    registers:
       - name:
           - f0
           - ft0

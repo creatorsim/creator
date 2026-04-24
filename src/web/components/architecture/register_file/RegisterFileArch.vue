@@ -19,13 +19,13 @@ along with CREATOR.  If not, see <http://www.gnu.org/licenses/>.
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
 
-import type { RegisterBank } from "@/core/core";
+import type { RegisterFile } from "@/core/core";
 
 import Registers from "../registers/Registers.vue";
 
 export default defineComponent({
   props: {
-    register_file: { type: Array as PropType<RegisterBank[]>, required: true },
+    register_file: { type: Array as PropType<RegisterFile[]>, required: true },
   },
   components: {
     Registers,
@@ -44,12 +44,12 @@ export default defineComponent({
     >
       <div class="register-file-header">
         <h5 class="register-file-title">{{ item.name }}</h5>
-        <span class="register-count">{{ item.elements.length }} registers</span>
+        <span class="register-count">{{ item.registers.length }} registers</span>
       </div>
 
       <div class="register-file-content">
         <Registers
-          :registers="register_file[index]!.elements"
+          :registers="register_file[index]!.registers"
           :register_file_index="index"
         />
       </div>

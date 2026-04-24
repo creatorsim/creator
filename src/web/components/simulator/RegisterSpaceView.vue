@@ -64,11 +64,11 @@ export default defineComponent({
     updateRegister(name: string, type: string, doublePrecision: boolean) {
       const reg = crex_findReg(name);
       const regSize =
-        REGISTERS[reg.indexComp!]!.elements[reg.indexElem!]!.nbits;
+        REGISTERS[reg.indexComp!]!.registers[reg.indexElem!]!.nbits;
 
       // compute value to store
       let value;
-      if (["int_registers", "ctrl_registers"].includes(type)) {
+      if (["int", "ctrl"].includes(type)) {
         // eslint-disable-next-line radix
         const newValue = parseInt(this.newValue);
         if (isNaN(newValue)) {
@@ -81,7 +81,7 @@ export default defineComponent({
 
         value = BigInt.asUintN(regSize, BigInt(newValue));
         // TODO: for RISC-V, use CAPI.RISCV.toBigInt
-      } else if (type === "fp_registers") {
+      } else if (type === "float") {
         const newValue = parseFloat(this.newValue);
         if (isNaN(newValue)) {
           show_notification(
@@ -223,7 +223,7 @@ export default defineComponent({
             <b-badge class="registerPopover"> {{ item.bin }} </b-badge>
           </b-td>
         </b-tr>
-        <b-tr v-if="item.type !== 'fp_registers'">
+        <b-tr v-if="item.type !== 'float'">
           <b-td  v-if="Sail_arch && item.type === 'v_registers'" >Signed <br> (v[{{ vectorMaxLength }}] - v[0])</b-td>
           <b-td  v-if="!Sail_arch || (Sail_arch && item.type !== 'v_registers') ">Signed</b-td>
           <!-- <b-td>Signed</b-td> -->
@@ -235,7 +235,7 @@ export default defineComponent({
             <b-badge class="registerPopover"> {{ item.signed }} </b-badge>
           </b-td>
         </b-tr>
-        <b-tr v-if="item.type !== 'fp_registers'">
+        <b-tr v-if="item.type !== 'float'">
           <b-td  v-if="Sail_arch && item.type === 'v_registers'" >Unsigned <br> (v[{{ vectorMaxLength }}] - v[0])</b-td>
           <b-td  v-if="!Sail_arch || (Sail_arch && item.type !== 'v_registers') ">Unsigned</b-td>
           <!-- <b-td>Unsigned</b-td> -->
@@ -247,7 +247,7 @@ export default defineComponent({
             <b-badge class="registerPopover"> {{ item.unsigned }} </b-badge>
           </b-td>
         </b-tr>
-        <b-tr v-if="item.type !== 'fp_registers'">
+        <b-tr v-if="item.type !== 'float'">
           <!-- <b-td>Char</b-td> -->
           <b-td  v-if="Sail_arch && item.type === 'v_registers'" >Char <br> (v[{{ vectorMaxLength }}] - v[0])</b-td>
           <b-td  v-if="!Sail_arch || (Sail_arch && item.type !== 'v_registers') ">Char</b-td>

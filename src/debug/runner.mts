@@ -153,11 +153,11 @@ async function main() {
                 //     console.log(
                 //         `Breakpoint hit at PC = 0x${breakpoint.toString(16).padStart(4, "0").toUpperCase()}`,
                 //     );
-                //     // for each element in in creator.getRegistersByBank("int_registers").elements, print:
+                //     // for each element in in creator.getRegistersByBank("int").registers, print:
                 //     // name[0], value
                 //     creator
-                //         .getRegistersByBank("int_registers")
-                //         .elements.forEach(reg => {
+                //         .getRegistersByBank("int")
+                //         .registers.forEach(reg => {
                 //             console.log(
                 //                 `${reg.name[0]}: 0x${reg.value.toString(16)}`,
                 //             );
@@ -170,8 +170,8 @@ async function main() {
                 }
                 if (totalInstructions === 0) {
                     creator
-                        .getRegistersByBank("int_registers")!
-                        .elements.forEach(reg => {
+                        .getRegistersByBank("int")!
+                        .registers.forEach(reg => {
                             console.log(
                                 `    ${reg.name[0]}: 0x${reg.value.toString(16)}`,
                             );
@@ -180,8 +180,8 @@ async function main() {
                 const ret = step();
                 // if (totalInstructions > 0) {
                 //     creator
-                //         .getRegistersByBank("int_registers")
-                //         .elements.forEach(reg => {
+                //         .getRegistersByBank("int")
+                //         .registers.forEach(reg => {
                 //             console.log(
                 //                 `    ${reg.name[0]}: 0x${reg.value.toString(16)}`,
                 //             );
@@ -200,9 +200,9 @@ async function main() {
                     ret.instructionData.machineCode,
                 );
                 // Dump registers after each cycle on one line
-                const regBank = creator.getRegistersByBank("int_registers");
+                const regBank = creator.getRegistersByBank("int");
                 if (regBank) {
-                    const registers = regBank.elements.map(
+                    const registers = regBank.registers.map(
                         reg => `${reg.name[0]}:0x${reg.value.toString(16)}`,
                     );
                     console.log(registers.join(" "));

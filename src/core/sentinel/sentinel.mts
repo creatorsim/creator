@@ -59,7 +59,7 @@ class RegisterEvent {
 
     get registerName() {
         return (
-            REGISTERS[this.regIndex]!.elements[this.elemIndex]!.name
+            REGISTERS[this.regIndex]!.registers[this.elemIndex]!.name
         );
     }
 
@@ -91,7 +91,7 @@ class CallFrame {
         const values: bigint[][] = [];
         for (const file of REGISTERS) {
             const curr = [];
-            for (const reg of file.elements) {
+            for (const reg of file.registers) {
                 curr.push(reg.value);
             }
             values.push(curr);
@@ -155,7 +155,7 @@ class ConventionRules {
       elemIndex: number
     ): SentinelErrorData[] {
         const violations = [];
-        const register = REGISTERS[regIndex]!.elements[elemIndex]!;
+        const register = REGISTERS[regIndex]!.registers[elemIndex]!;
         const events = frame.getRegisterEvents(regIndex, elemIndex);
 
         // Rule 1: Saved registers must be saved before modification
@@ -322,7 +322,7 @@ class CallingConventionValidator {
 
         // Validate each saved register
         for (const [i, file] of REGISTERS.entries()) {
-            for (const [j, register] of file.elements.entries()) {
+            for (const [j, register] of file.registers.entries()) {
                 // Only check registers that should be saved
                 if (register.properties.includes("saved")) {
                     const regViolations = ConventionRules.validateSavedRegister(

@@ -426,7 +426,7 @@ class CreatorRpcServer {
                 };
             }
 
-            const registers = registerBank.elements.map(reg => {
+            const registers = registerBank.registers.map(reg => {
                 // Create display name with primary and alternative names
                 const primaryName = reg.name[0];
                 const alternativeNames = reg.name.slice(1);

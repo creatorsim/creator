@@ -5,7 +5,7 @@
   "description": "v2",
   "type": "object",
   "required": [
-    "components",
+    "register_files",
     "config",
     "instructions",
     "memory_layout",
@@ -17,15 +17,15 @@
       "description": "Architecture version",
       "type": "string"
     },
-    "components": {
-      "description": "Components (register files) of the architecture. It's assumed that the first register of the first file will contain the program counter",
+    "register_files": {
+      "description": "Register files of the architecture",
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Component"
+        "$ref": "#/definitions/RegisterFile"
       }
     },
     "config": {
-      "description": "Metadata about the architecture Order of elements is assumed to be name, bits, description, data format, memory alignment, main function, passing convention, and sensitive register name",
+      "description": "Metadata about the architecture",
       "allOf": [
         {
           "$ref": "#/definitions/Config"
@@ -82,7 +82,7 @@
       ]
     },
     "memory_layout": {
-      "description": "Memory layout of the architecture. Order of elements is assumed to be optionally ktext start/end and kdata start/end, followed by text start/end, data start/end, and stack start/end",
+      "description": "Memory layout of the architecture",
       "allOf": [
         {
           "$ref": "#/definitions/MemoryLayout"
@@ -154,16 +154,16 @@
         }
       ]
     },
-    "Component": {
+    "RegisterFile": {
       "description": "Register file",
       "type": "object",
-      "required": ["double_precision", "elements", "name", "type"],
+      "required": ["double_precision", "registers", "name", "type"],
       "properties": {
         "double_precision": {
           "description": "Whether the registers have double the word size",
           "type": "boolean"
         },
-        "elements": {
+        "registers": {
           "description": "Registers in this file",
           "type": "array",
           "items": {
@@ -178,29 +178,29 @@
           "description": "Type of the registers",
           "allOf": [
             {
-              "$ref": "#/definitions/ComponentType"
+              "$ref": "#/definitions/RegisterType"
             }
           ]
         }
       }
     },
-    "ComponentType": {
+    "RegisterType": {
       "description": "Types of register files allowed",
       "oneOf": [
         {
           "description": "Control registers",
           "type": "string",
-          "enum": ["ctrl_registers"]
+          "enum": ["ctrl"]
         },
         {
           "description": "Integer registers",
           "type": "string",
-          "enum": ["int_registers"]
+          "enum": ["int"]
         },
         {
           "description": "Floating point registers",
           "type": "string",
-          "enum": ["fp_registers"]
+          "enum": ["float"]
         },
         {
           "description": "Vector registers",

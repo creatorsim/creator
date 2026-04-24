@@ -183,7 +183,7 @@ export default defineComponent({
 
       <!-- Register File view -->
       <div v-if="currentView === 'register-file'" class="architecture-section">
-        <RegisterFileArch :register_file="architecture.components" />
+        <RegisterFileArch :register_file="architecture.register_files" />
       </div>
 
       <!-- Instructions view -->

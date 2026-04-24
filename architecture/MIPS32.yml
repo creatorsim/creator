@@ -19,11 +19,11 @@ config:
     - name: CreatorAssembler
       description: "Default CREATOR assembler"
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - PC
         nbits: 32
@@ -128,9 +128,9 @@ components:
           - read
           - write
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - "0"
           - zero
@@ -462,9 +462,9 @@ components:
           - read
           - write
   - name: 32-bit FP registers
-    type: fp_registers
+    type: float
     double_precision: false
-    elements:
+    registers:
       - name:
           - f0
           - FP0

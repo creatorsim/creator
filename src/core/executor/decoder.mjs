@@ -36,7 +36,7 @@ export function resetDecoderCache() {
 /**
  * Returns the register name given its binary representation and type
  *
- * @param {string} type - The register type (e.g., "int_registers", "fp_registers", "ctrl_registers")
+ * @param {string} type - The register type (e.g., "int", "float", "ctrl")
  * @param {string} binaryValue - The binary representation of the register
  * @returns {string|null} - The register name or null if not found
  */
@@ -48,7 +48,7 @@ function decodeRegister(type, binaryValue) {
             continue;
         }
 
-        for (const register of component.elements) {
+        for (const register of component.registers) {
             if (register.encoding === binaryValueInt) {
                 return register.name[0]; // Return the first name (canonical)
             }
@@ -139,14 +139,14 @@ function processInstructionField(field, encodedInstruction) {
             // The register type in the instruction is different from the one in the architecture
             switch (field.type) {
                 case "INT-Reg":
-                    convertedType = "int_registers";
+                    convertedType = "int";
                     break;
                 case "SFP-Reg":
                 case "DFP-Reg":
-                    convertedType = "fp_registers";
+                    convertedType = "float";
                     break;
                 case "Ctrl-Reg":
-                    convertedType = "ctrl_registers";
+                    convertedType = "ctrl";
                     break;
                 default:
                     throw new Error("Unknown register type: " + field.type);

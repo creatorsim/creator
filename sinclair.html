@@ -543,7 +543,7 @@ Executed instructions will appear here...</pre
           function updateRegisterView() {
             try {
               const registers =
-                creator.getRegistersByBank("int_registers").elements;
+                creator.getRegistersByBank("int").registers;
               let regText = "";
               registers.forEach((reg, index) => {
                 const name = reg.name[0].padEnd(4, " ");

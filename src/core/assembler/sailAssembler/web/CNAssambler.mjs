@@ -391,13 +391,13 @@ export function writeDataDumpMemory32(){
 
     main_memory.writeWord(BigInt(stack_address), [0x0, 0x0, 0x0, 0x0]); // writeMemory("00", parseInt(stack_address), "word") ;
     if (architecture.config.word_size == 32) {
-      architecture.components[1].elements[2].value = 
+      architecture.register_files[1].registers[2].value = 
       BigInt(parseInt(stack_address) >>> 0, 10);
-      architecture.components[1].elements[2].default_value = 
+      architecture.register_files[1].registers[2].default_value = 
         BigInt(parseInt(stack_address) >>> 0, 10);   
     }else {
-        architecture.components[1].elements[2].value = stack_address;
-        architecture.components[1].elements[2].default_value = stack_address;
+        architecture.register_files[1].registers[2].value = stack_address;
+        architecture.register_files[1].registers[2].default_value = stack_address;
     }
 }
 
@@ -638,14 +638,14 @@ export function writeDataDumpMemory64(){
 
     main_memory.writeWord(BigInt(stack_address), [0x0, 0x0, 0x0, 0x0]); // writeMemory("00", parseInt(stack_address), "word") ;
     if (architecture.config.word_size == 32) {
-      architecture.components[1].elements[2].value = 
+      architecture.register_files[1].registers[2].value = 
       BigInt(parseInt(stack_address) >>> 0, 10);
       
-      architecture.components[1].elements[2].default_value = 
+      architecture.register_files[1].registers[2].default_value = 
         BigInt(parseInt(stack_address) >>> 0, 10);   
     }else {
-        architecture.components[1].elements[2].value = stack_address;
-        architecture.components[1].elements[2].default_value = stack_address;
+        architecture.register_files[1].registers[2].value = stack_address;
+        architecture.register_files[1].registers[2].default_value = stack_address;
     }
 }
 export async function as(files){

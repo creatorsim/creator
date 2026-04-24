@@ -150,7 +150,7 @@ export default defineComponent({
 
       switch (representation) {
         case "signed":
-          if (this.type === "ctrl_registers" || this.type === "int_registers") {
+          if (this.type === "ctrl" || this.type === "int") {
             if (this.is_positive(this.register.value, this.register.nbits)) {
               ret = this.register.value.toString(10);
             } else {
@@ -167,7 +167,7 @@ export default defineComponent({
           break;
 
         case "unsigned":
-          if (this.type === "ctrl_registers" || this.type === "int_registers") {
+          if (this.type === "ctrl" || this.type === "int") {
             ret = parseInt(this.register.value.toString(10), 10) >>> 0;
           } else if (!this.double_precision) {
             ret = float2int_v2(bi_BigIntTofloat(this.register.value)) >>> 0;
@@ -177,7 +177,7 @@ export default defineComponent({
           break;
 
         case "ieee32":
-          if (this.type === "ctrl_registers" || this.type === "int_registers") {
+          if (this.type === "ctrl" || this.type === "int") {
             ret = hex2float(
               "0x" + this.register.value.toString(16).padStart(8, "0"),
             );
@@ -188,7 +188,7 @@ export default defineComponent({
 
         case "ieee64":
           // FIXME: this is wrong...
-          if (this.type === "ctrl_registers" || this.type === "int_registers") {
+          if (this.type === "ctrl" || this.type === "int") {
             ret = hex2double(
               "0x" + this.register.value.toString(16).padStart(16, "0"),
             );
@@ -206,7 +206,7 @@ export default defineComponent({
           break;
 
         case "bin":
-          if (this.type === "ctrl_registers" || this.type === "int_registers") {
+          if (this.type === "ctrl" || this.type === "int") {
             ret = this.register.value
               .toString(2)
               .padStart(this.register.nbits, "0");

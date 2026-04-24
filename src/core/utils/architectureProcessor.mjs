@@ -413,16 +413,16 @@ function processPseudoInstructions(architectureObj) {
  * @returns {Object} - The architecture object with converted values
  */
 function convertElementValuesToBigInt(architectureObj) {
-    if (!architectureObj.components) {
+    if (!architectureObj.register_files) {
         return architectureObj;
     }
 
-    for (const component of architectureObj.components) {
-        if (!component.elements) {
+    for (const file of architectureObj.register_files) {
+        if (!file.registers) {
             continue;
         }
 
-        for (const element of component.elements) {
+        for (const element of file.registers) {
             // Convert function using two's complement
             const convert = (x) => BigInt.asUintN(element.nbits, BigInt(x));
             // Convert value to BigInt if it exists and is not already a BigInt

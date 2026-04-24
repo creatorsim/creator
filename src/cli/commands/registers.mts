@@ -48,15 +48,15 @@ function displayRegistersByBank(regType: string, format: string = "raw"): void {
 
     console.log(`${registerBank.name}:`);
 
-    const rowCount = Math.ceil(registerBank.elements.length / 4);
+    const rowCount = Math.ceil(registerBank.registers.length / 4);
 
     // Calculate max width for each column
     const maxWidths = [0, 0, 0, 0];
     for (let row = 0; row < rowCount; row++) {
         for (let col = 0; col < 4; col++) {
             const index = row * 4 + col;
-            if (index < registerBank.elements.length) {
-                const reg = registerBank.elements[index];
+            if (index < registerBank.registers.length) {
+                const reg = registerBank.registers[index];
                 const primaryName = reg!.name[0];
                 const altNames = reg!.name.slice(1).join(",");
                 const displayName = altNames
@@ -71,8 +71,8 @@ function displayRegistersByBank(regType: string, format: string = "raw"): void {
         let line = "";
         for (let col = 0; col < 4; col++) {
             const index = row * 4 + col;
-            if (index < registerBank.elements.length) {
-                const reg = registerBank.elements[index];
+            if (index < registerBank.registers.length) {
+                const reg = registerBank.registers[index];
                 const primaryName = reg!.name[0];
                 const altNames = reg!.name.slice(1).join(",");
 
@@ -82,7 +82,7 @@ function displayRegistersByBank(regType: string, format: string = "raw"): void {
 
                 const rawValue = creator.dumpRegister(
                     primaryName,
-                    reg!.type === "fp_registers" ? "raw" : "twoscomplement",
+                    reg!.type === "float" ? "raw" : "twoscomplement",
                 );
                 const floatValue = creator.dumpRegister(primaryName, "decimal");
 
@@ -140,7 +140,7 @@ export function handleRegCommand(args: string[]): void {
 
             const rawValue = creator.dumpRegister(
                 regName,
-                regInfo.type === "fp_registers" ? "raw" : "twoscomplement",
+                regInfo.type === "float" ? "raw" : "twoscomplement",
             );
             const floatValue = creator.dumpRegister(regName, "decimal");
             console.log(`${regName}: 0x${rawValue} | ${floatValue}`);

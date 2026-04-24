@@ -247,7 +247,7 @@ export const MEM = {
 
         // Add stack hint if we're writing to the stack segment
         if (segment === "stack") {
-            const reg = REGISTERS[i]!.elements[j]!;
+            const reg = REGISTERS[i]!.registers[j]!;
             stackTracker.addHint(address, reg.name.join(","));
         }
 

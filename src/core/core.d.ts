@@ -20,7 +20,7 @@
 /**
  * Deno doesn't fully support "sloppy imports"
  * (https://docs.deno.com/runtime/reference/cli/unstable_flags/#--unstable-sloppy-imports),
- * which would make our lives easier by just writting in a `foo.ts` file:
+ * which would make our lives easier by just writing in a `foo.ts` file:
  * ```ts
  * import { architecture, status } from "@/core/core";
  * ```
@@ -31,11 +31,11 @@
 
 // TODO: extract this data from the assembler
 
-type RegisterBank = {
+type RegisterFile = {
     name: string;
     type: string;
     double_precision: boolean;
-    elements: Register[];
+    registers: Register[];
 };
 
 type Register = {
@@ -101,7 +101,7 @@ type MemoryLayout = {
 
 type Directive = { name: string; action: string };
 
-export declare const REGISTERS: RegisterBank[];
+export declare const REGISTERS: RegisterFile[];
 
 type ArchitectureInterrupts = {
     handlers: {
@@ -140,7 +140,7 @@ type Architecture = {
         }[];
     };
     memory_layout: MemoryLayout;
-    components: RegisterBank[];
+    register_files: RegisterFile[];
     instructions: Instruction[];
     pseudoinstructions: PseudoInstruction[];
     directives: Directive[];
