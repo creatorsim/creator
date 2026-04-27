@@ -2447,7 +2447,7 @@ instructions:
         - field: funct3
           value: "010"
         - field: rd
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         let addr = registers[rs1] + imm;
         if (CAPI.VALIDATION.isMisaligned(addr, 4))
@@ -3076,7 +3076,7 @@ instructions:
         - field: funct3
           value: "010"
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         let value = registers[rs2] & 0xFFFFFFFFn;
         let addr = registers[rs1] + imm;
@@ -3182,7 +3182,7 @@ instructions:
         - field: rd
           type: DFP-Reg
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
         - field: funct7
           value: "0100001"
         - field: funct5
@@ -3280,7 +3280,7 @@ instructions:
           optional: true
           order: 3
         - field: rd
-          type: SFP-Reg
+          type: DFP-Reg
         - field: rs1
           type: DFP-Reg
       preoperation: |
@@ -4138,30 +4138,30 @@ pseudoinstructions:
     - name: fabs.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnjx.s rs1, rs2, rs2;
 
     - name: fmv.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnj.s rs1, rs2, rs2;
 
     - name: fneg.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnjn.s rs1, rs2, rs2;
   D:
