@@ -30,3 +30,38 @@ execution_tests(
         ["test_riscv_syscall_012.s", ["a\n"]],
     ]),
 );
+execution_tests(
+    ARCH.riscv,
+    "examples/RISCV-32",
+    new Map([
+        ["example9.s", ["123\n", "456\n"]],
+        ["example10.s", [long_str.length + "\n", long_str]],
+    ]),
+    undefined,
+    undefined,
+    ".",
+);
+execution_tests(
+    ARCH.riscv,
+    "examples/RISCV-32-devices",
+    new Map([["example2.s", [long_str.length + "\n", long_str]]]),
+    undefined,
+    undefined,
+    ".",
+);
+execution_tests(
+    ARCH.riscv,
+    "examples/RISCV-32-interrupts",
+    undefined,
+    undefined,
+    undefined,
+    ".",
+);
+execution_tests(
+    ARCH.riscv,
+    "examples/RISCV-simple",
+    undefined,
+    undefined,
+    undefined,
+    ".",
+);

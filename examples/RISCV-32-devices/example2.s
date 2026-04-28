@@ -27,7 +27,7 @@
         # read int
         li t2, 5
         sw t2, 0(t1)
-        lw t3, 0(t0)  # t3: lenght
+        lw t3, 0(t0)  # t3: length
 
         # print "Insert string..."
         la t2, string2

@@ -2075,25 +2075,6 @@ instructions:
         debugging environment. It generates a breakpoint exception and performs
         no other operation.
 
-    # TODO: delete this when devices exist
-    - name: print_int
-      type: Syscall
-      template: Custom
-      fields:
-        - field: opcode
-          value: "1110011"
-        - field: funct12
-          type: cop
-          startbit: 31
-          stopbit: 20
-          value: "000000000010"
-        - field: zeros
-          type: cop
-          startbit: 19
-          stopbit: 7
-          value: "0000000000000"
-      definition: "CAPI.SYSCALL.print(registers.a0, 'int32');"
-
   M:
     #   ____ __     __ _____ ____   __  __
     #  |  _ \\ \   / /|___ /|___ \ |  \/  |

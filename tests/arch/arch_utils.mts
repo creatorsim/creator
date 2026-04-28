@@ -22,7 +22,7 @@ export const ARCH = {
     simple8: "simple8.yml",
 };
 
-const PREFIX = path.fromFileUrl(import.meta.url + "/../../../");
+const SNAP_PREFIX = path.fromFileUrl(import.meta.url + "/../../../");
 
 /**
  * Callback to run within a test
@@ -42,17 +42,18 @@ type TestFN = (
  * Executes a group of snapshot tests
  * @param archPath - Path to the YAML architecture configuration file, from the architectures folder
  * @param dir - Path to the directory with the assembly files
+ * @param prefix - Base prefix of `dir`
  * @param fn - Callback to run within the test
  */
-function run_tests(archPath: string, dir: string, fn: TestFN): void {
+function run_tests(archPath: string, dir: string, prefix: string, fn: TestFN): void {
     logger.disable();
     const ARCH_PATH = "architecture/" + archPath;
     loadArchitecture(ARCH_PATH);
-    const DIR = `./tests/arch/${dir}`;
+    const DIR = `${prefix}/${dir}`;
     for (const file of fs.globSync("*.s", { cwd: DIR })) {
         Deno.test(`${dir}/${file}`, async t => {
             const testAssembly = fs.readFileSync(`${DIR}/${file}`, "utf8");
-            const path = `${PREFIX}/tests/arch/__snapshots__/${dir}/${file}.snap`;
+            const path = `${SNAP_PREFIX}/tests/arch/__snapshots__/${dir}/${file}.snap`;
             await fn(t, file, testAssembly, path);
         });
     }
@@ -73,12 +74,13 @@ export function execution_tests(
     keyboard: Map<string, string[]> = new Map(),
     expect_error: Set<string> = new Set(),
     library: boolean = false,
+    prefix: string = "./tests/arch",
 ): void {
     testKeyboard.enable = true;
-    run_tests(archPath, dir, async (t, file, testAssembly, snapPath) => {
+    run_tests(archPath, dir, prefix, async (t, file, testAssembly, snapPath) => {
         const errors = expect_error.has(file);
         if (library) {
-            const libPath = `./tests/arch/${dir}/${file.slice(0, -2)}.yml`;
+            const libPath = `${prefix}/${dir}/${file.slice(0, -2)}.yml`;
             const testLib = fs.readFileSync(libPath, "utf8");
             creator.load_library(testLib);
         }
@@ -153,7 +155,7 @@ export function execution_tests(
  * @param dir - Path to the directory with the assembly files
  */
 export function compile_error_tests(archPath: string, dir: string): void {
-    run_tests(archPath, dir, async (t, _, testAssembly, snapPath) => {
+    run_tests(archPath, dir, "./tests/arch", async (t, _, testAssembly, snapPath) => {
         // Compile code
         const res_ansi = (await creator.assembly_compile(
             testAssembly,

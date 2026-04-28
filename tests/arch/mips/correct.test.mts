@@ -30,3 +30,14 @@ execution_tests(
         ["test_mips_syscall_012.s", ["a\n"]],
     ]),
 );
+execution_tests(
+    ARCH.mips,
+    "examples/MIPS-32",
+    new Map([
+        ["example9.s", ["123\n", "456\n"]],
+        ["example10.s", [long_str.length + "\n", long_str]],
+    ]),
+    undefined,
+    undefined,
+    ".",
+);

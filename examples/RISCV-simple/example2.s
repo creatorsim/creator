@@ -8,7 +8,8 @@
 .text
 main:
         # 1.- to load float in hex form
-        lw   s1,  float1(x0)
+        la   t0,  float1
+        lw   s1,  0(t0)
 
         # 2.- to load masks
         #   sign  -> 1000 0000 0000 0000 ...
@@ -20,7 +21,7 @@ main:
         #   mant. -> 0000 0000 0111 1111 ...
         lui  s7,  0x001F
         slli s7,  s7,  16
-        ori  s0,  x0,  0xFFFF
+        li   s0,  0xFFFF
         or   s7,  s7,  s0
 
         # 3.- to apply mask

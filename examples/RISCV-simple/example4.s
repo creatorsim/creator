@@ -5,14 +5,14 @@
 .text
 main:
            # loop initialization
-           lui x1,  0
-           lui x2,  5
-           lui x3,  1
+           lui t1,  0
+           lui t2,  5
+           lui t3,  1
            # loop header
-    loop1: beq x1, x2, fin1
+    loop1: beq t1, t2, fin1
            # loop body
-           add x1, x1, x3
-           beq x0, x0, loop1
+           add t1, t1, t3
+           beq t0, t0, loop1
 
      fin1: jalr x0, 0(ra)
 
