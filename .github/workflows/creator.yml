@@ -110,7 +110,6 @@ jobs:
     name: Build CLI (${{ matrix.os }})
     runs-on: ubuntu-latest
     needs: build-cli-wasm
-    if: github.event_name != 'pull_request'
     strategy:
       matrix:
         include:
@@ -198,6 +197,7 @@ jobs:
     name: Publish nightly release
     runs-on: ubuntu-latest
     needs: [build-cli-binaries, package-architectures, test]
+    if: github.event_name != 'pull_request'
     concurrency:
       group: nightly-release
       cancel-in-progress: false
@@ -229,7 +229,7 @@ jobs:
     name: Publish latest tagged release
     runs-on: ubuntu-latest
     needs: [build-cli-binaries, package-architectures, test]
-    if: github.ref_type == 'tag'
+    if: github.ref_type == 'tag' && github.event_name != 'pull_request'
     concurrency:
       group: stable-release
       cancel-in-progress: false
