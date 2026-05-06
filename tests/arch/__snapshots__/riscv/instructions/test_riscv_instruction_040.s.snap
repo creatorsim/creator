@@ -43,7 +43,7 @@ snapshot[`riscv/instructions/test_riscv_instruction_040.s 1`] = `
     "9": 255,
   },
   registers: {
-    "x11,a1": "0x8",
+    "x11,a1": "0xfffffff8",
     "x12,a2": "0x18",
     "x5,t0": "0x10",
     "x6,t1": "0x100",

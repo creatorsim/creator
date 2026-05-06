@@ -2194,7 +2194,9 @@ instructions:
         - field: funct3
           value: "110"
       definition: |
-        registers[rd] = registers[rs1] % registers[rs2];
+        registers[rd] = CAPI.FP.int2uint(
+          CAPI.FP.uint2int(registers[rs1]) % CAPI.FP.uint2int(registers[rs2])
+        );
       help: Perform an XLEN-bit by XLEN-bit signed integer reminder of rs1 by
         rs2.
 
