@@ -49,11 +49,11 @@ extensions:
     description: "RV32/RV64 Privileged instructions"
     type: extension
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - pc
         nbits: 32
@@ -149,9 +149,9 @@ components:
           - write
 
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - x0
           - zero
@@ -490,9 +490,9 @@ components:
           - write
 
   - name: Floating point registers
-    type: fp_registers
+    type: float
     double_precision: true
-    elements:
+    registers:
       - name:
           - f0
           - ft0
@@ -2075,25 +2075,6 @@ instructions:
         debugging environment. It generates a breakpoint exception and performs
         no other operation.
 
-    # TODO: delete this when devices exist
-    - name: print_int
-      type: Syscall
-      template: Custom
-      fields:
-        - field: opcode
-          value: "1110011"
-        - field: funct12
-          type: cop
-          startbit: 31
-          stopbit: 20
-          value: "000000000010"
-        - field: zeros
-          type: cop
-          startbit: 19
-          stopbit: 7
-          value: "0000000000000"
-      definition: "CAPI.SYSCALL.print(registers.a0, 'int32');"
-
   M:
     #   ____ __     __ _____ ____   __  __
     #  |  _ \\ \   / /|___ /|___ \ |  \/  |
@@ -2213,7 +2194,9 @@ instructions:
         - field: funct3
           value: "110"
       definition: |
-        registers[rd] = registers[rs1] % registers[rs2];
+        registers[rd] = CAPI.FP.int2uint(
+          CAPI.FP.uint2int(registers[rs1]) % CAPI.FP.uint2int(registers[rs2])
+        );
       help: Perform an XLEN-bit by XLEN-bit signed integer reminder of rs1 by
         rs2.
 

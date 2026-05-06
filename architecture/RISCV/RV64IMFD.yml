@@ -50,11 +50,11 @@ extensions:
     description: "RV32/RV64 Privileged instructions"
     type: extension
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - pc
         nbits: 64
@@ -150,9 +150,9 @@ components:
           - write
 
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - x0
           - zero
@@ -491,9 +491,9 @@ components:
           - write
 
   - name: Floating point registers
-    type: fp_registers
+    type: float
     double_precision: true
-    elements:
+    registers:
       - name:
           - f0
           - ft0
@@ -2412,7 +2412,9 @@ instructions:
         - field: funct3
           value: "110"
       definition: |
-        registers[rd] = registers[rs1] % registers[rs2];
+        registers[rd] = CAPI.FP.int2uint(
+          CAPI.FP.uint2int(registers[rs1]) % CAPI.FP.uint2int(registers[rs2])
+        );
       help: Perform an XLEN-bit by XLEN-bit signed integer reminder of rs1 by
         rs2.
 
@@ -2447,7 +2449,7 @@ instructions:
         - field: funct3
           value: "010"
         - field: rd
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         let addr = registers[rs1] + imm;
         if (CAPI.VALIDATION.isMisaligned(addr, 4))
@@ -3076,7 +3078,7 @@ instructions:
         - field: funct3
           value: "010"
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         let value = registers[rs2] & 0xFFFFFFFFn;
         let addr = registers[rs1] + imm;
@@ -3107,7 +3109,7 @@ instructions:
         let addr = registers[rs1] + imm;
         if (CAPI.VALIDATION.isMisaligned(addr, 8))
             CAPI.VALIDATION.raise('The memory must be aligned');
-        registers[rd] = CAPI.MEM.read(8, 8, rd, false);
+        registers[rd] = CAPI.MEM.read(addr, 8, rd, false);
       help: Load a double-precision floating-point value from memory into floating-point register rd.
 
     - name: fadd.d
@@ -3182,7 +3184,7 @@ instructions:
         - field: rd
           type: DFP-Reg
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
         - field: funct7
           value: "0100001"
         - field: funct5
@@ -3280,7 +3282,7 @@ instructions:
           optional: true
           order: 3
         - field: rd
-          type: SFP-Reg
+          type: DFP-Reg
         - field: rs1
           type: DFP-Reg
       preoperation: |
@@ -4138,30 +4140,30 @@ pseudoinstructions:
     - name: fabs.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnjx.s rs1, rs2, rs2;
 
     - name: fmv.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnj.s rs1, rs2, rs2;
 
     - name: fneg.s
       fields:
         - field: rs1
-          type: SFP-Reg
+          type: DFP-Reg
           suffix: ","
         - field: rs2
-          type: SFP-Reg
+          type: DFP-Reg
       definition: |
         fsgnjn.s rs1, rs2, rs2;
   D:

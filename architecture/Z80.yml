@@ -20,11 +20,11 @@ config:
     - name: "RASM"
       description: "RASM Z80 Assembler"
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - PC
         nbits: 16
@@ -36,9 +36,9 @@ components:
           - write
           - program_counter
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name: [A]
         nbits: 8
         value: 0

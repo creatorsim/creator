@@ -100,7 +100,7 @@ export default defineComponent({
   methods: {
     onRegisterUpdated(payload: any) {
       const { indexComp, indexElem } = payload;
-      const register = REGISTERS[indexComp]?.elements[indexElem];
+      const register = REGISTERS[indexComp]?.registers[indexElem];
 
       if (!register) return;
 
@@ -121,7 +121,7 @@ export default defineComponent({
     onRegistersReset() {
       // Refresh all register components when registers are reset
       for (const bank of REGISTERS) {
-        for (const reg of bank.elements) {
+        for (const reg of bank.registers) {
           const refs = this.$refs[`reg${reg.name[0]}`] as any;
           refs?.at?.(0)?.refresh();
         }
@@ -135,7 +135,7 @@ export default defineComponent({
 
       // Clear from all currently mounted register components
       for (const bank of REGISTERS) {
-        for (const reg of bank.elements) {
+        for (const reg of bank.registers) {
           const refs = this.$refs[`reg${reg.name[0]}`] as any;
           refs?.at?.(0)?.clearGlow();
         }
@@ -270,7 +270,7 @@ export default defineComponent({
             >
               <b-col
                 class="p-1 mx-0"
-                v-for="(register, regIndex) in bank.elements"
+                v-for="(register, regIndex) in bank.registers"
                 :key="register.name[0]"
               >
                 <Register

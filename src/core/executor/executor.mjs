@@ -221,7 +221,7 @@ function incrementProgramCounter(nwords) {
     const increment = BigInt((nwords * WORDSIZE) / BYTESIZE);
     // Direct access to PC register value
     const pc_element =
-        REGISTERS[PC_REG_INDEX.indexComp].elements[PC_REG_INDEX.indexElem];
+        REGISTERS[PC_REG_INDEX.indexComp].registers[PC_REG_INDEX.indexElem];
     const new_pc = BigInt(pc_element.value) + increment;
 
     guiVariables.previous_PC = BigInt(pc_element.value);

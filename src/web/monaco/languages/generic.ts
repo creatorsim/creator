@@ -37,9 +37,9 @@ export interface ArchitectureConfig {
         syntax?: string;
         sensitive_register_name?: boolean;
     };
-    components?: Array<{
+    register_files?: Array<{
         name?: string;
-        elements?: Array<{
+        registers?: Array<{
             name: string | string[];
             nbits?: number;
             encoding?: number;
@@ -157,19 +157,19 @@ export function generateLanguageConfig(
 }
 
 /**
- * Extract all register names from architecture components
+ * Extract all register names from architecture register files
  */
 function extractRegisterNames(architecture: ArchitectureConfig): string[] {
     const registers: string[] = [];
 
-    if (!architecture?.components) {
+    if (!architecture?.register_files) {
         return registers;
     }
 
-    for (const component of architecture.components) {
-        if (!component.elements) continue;
+    for (const file of architecture.register_files) {
+        if (!file.registers) continue;
 
-        for (const element of component.elements) {
+        for (const element of file.registers) {
             // Handle both array and single name formats
             const names = Array.isArray(element.name)
                 ? element.name
@@ -349,30 +349,30 @@ export function generateTokensProvider(
 }
 
 /**
- * Generate register completions from architecture components
+ * Generate register completions from architecture register files
  */
 function generateRegisterCompletions(
     architecture: ArchitectureConfig,
 ): CompletionItemBase[] {
     const completions: CompletionItemBase[] = [];
 
-    if (!architecture?.components) {
+    if (!architecture?.register_files) {
         return completions;
     }
 
-    for (const component of architecture.components) {
-        if (!component.elements) continue;
+    for (const file of architecture.register_files) {
+        if (!file.registers) continue;
 
-        const componentName = component.name || "Register";
+        const fileName = file.name || "Register";
 
-        for (const element of component.elements) {
+        for (const element of file.registers) {
             const names = Array.isArray(element.name)
                 ? element.name
                 : [element.name];
             const aliases = names.slice(1);
 
-            // Create a detail string with component type and aliases
-            let detail = `${componentName}`;
+            // Create a detail string with register type and aliases
+            let detail = `${fileName}`;
             if (element.encoding !== undefined) {
                 detail += ` (${element.encoding})`;
             }

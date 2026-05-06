@@ -30,3 +30,4 @@
       ecall
 
       li t0, 0
+      jr ra

@@ -123,7 +123,7 @@ export function kbd_read_float(keystroke, params) {
     // If the current architecture has a write float specialization, use it.
     // Otherwise, fallback to writing the bits directly
     if (CAPI.ARCH.writeFloat !== undefined) {
-        const reg = architecture.components[params.indexComp].elements[params.indexElem]
+        const reg = architecture.register_files[params.indexComp].registers[params.indexElem]
         CAPI.ARCH.writeFloat(value, reg.name[0])
     } else  {
         const buffer = new ArrayBuffer(4);
@@ -157,7 +157,7 @@ export function kbd_read_double(keystroke, params) {
     // If the current architecture has a write float specialization, use it.
     // Otherwise, fallback to writing the bits directly
     if (CAPI.ARCH.writeDouble !== undefined) {
-        const reg = architecture.components[params.indexComp].elements[params.indexElem]
+        const reg = architecture.register_files[params.indexComp].registers[params.indexElem]
         CAPI.ARCH.writeDouble(value, reg.name[0])
     } else  {
         const buffer = new ArrayBuffer(8);

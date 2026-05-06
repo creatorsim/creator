@@ -46,9 +46,9 @@ export default defineComponent({
     },
     current_reg_name() {
       switch (this.current_reg_type) {
-        case "int_registers":
+        case "int":
           return "INT/Ctrl Registers";
-        case "fp_registers":
+        case "float":
           return "FP Registers";
         case "v_registers":
           return "Vector Registers";
@@ -70,8 +70,8 @@ export default defineComponent({
   data() {
     return {
       reg_representation_options: [
-        { text: "INT/Ctrl Registers", value: "int_registers" },
-        { text: "FP Registers", value: "fp_registers" },
+        { text: "INT/Ctrl Registers", value: "int" },
+        { text: "FP Registers", value: "float" },
         { text: "Vector Registers", value: "v_registers" },
         { text: "Control state Registers", value: "csr_registers" },
       ],
@@ -108,8 +108,8 @@ export default defineComponent({
 
     getVariant(): "secondary" | "outline-secondary" {
       if (
-        this.current_reg_type === "int_registers" ||
-        this.current_reg_type === "fp_registers" || 
+        this.current_reg_type === "int" ||
+        this.current_reg_type === "float" || 
         this.current_reg_type === "v_registers" || 
         this.current_reg_type === "csr_registers"
       ) {
@@ -132,8 +132,8 @@ export default defineComponent({
       <!-- Registers Tab -->
       <button
         v-if="register_file_num <= 5"
-        :class="['tab', { active: current_reg_type === 'int_registers' }]"
-        @click="change_data_view('int_registers')"
+        :class="['tab', { active: current_reg_type === 'int' }]"
+        @click="change_data_view('int')"
       >
         <font-awesome-icon :icon="['fas', 'microchip']" />
         <span>Registers</span>
@@ -146,8 +146,8 @@ export default defineComponent({
             'tab',
             {
               active:
-                current_reg_type === 'int_registers' ||
-                current_reg_type === 'fp_registers' ||
+                current_reg_type === 'int' ||
+                current_reg_type === 'float' ||
                 current_reg_type === 'v_registers' ||
                 current_reg_type === 'csr_registers',
             },
@@ -164,13 +164,13 @@ export default defineComponent({
         <div v-if="dropdownOpen" class="dropdown-menu">
           <button
             class="dropdown-item"
-            @click="change_data_view('int_registers')"
+            @click="change_data_view('int')"
           >
             CPU-INT/Ctrl Registers
           </button>
           <button
             class="dropdown-item"
-            @click="change_data_view('fp_registers')"
+            @click="change_data_view('foat')"
           >
             CPU-FP Registers
           </button>

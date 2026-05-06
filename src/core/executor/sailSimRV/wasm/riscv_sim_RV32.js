@@ -840,21 +840,21 @@ var Module = (() => {
           // console.log("Tamaño: ", size_elem);
           if(size_elem === "000"){
             document.app.$data.v_length = 8;
-            // architecture.components[3].total_elements = 64;
+            // architecture.register_files[3].total_elements = 64;
           } else if (size_elem === "001") {
             document.app.$data.v_length = 16;
-            // architecture.components[3].total_elements = 32;
+            // architecture.register_files[3].total_elements = 32;
           } else if (size_elem === "010"){
             document.app.$data.v_length = 32;
-            // architecture.components[3].total_elements = 16;
+            // architecture.register_files[3].total_elements = 16;
           }else {
             document.app.$data.v_length = 64;
-            // architecture.components[3].total_elements = 8;
+            // architecture.register_files[3].total_elements = 8;
           }
-          // architecture.components[3].length_elem = length_vext;
+          // architecture.register_files[3].length_elem = length_vext;
         }
         else if (CSRMatch[2] === "vl"){
-          // architecture.components[3].elems_op = parseInt(CSRMatch[5], 16);
+          // architecture.register_files[3].elems_op = parseInt(CSRMatch[5], 16);
         }
       }
       if (vectorMatch){

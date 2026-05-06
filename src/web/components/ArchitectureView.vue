@@ -251,7 +251,7 @@ export default defineComponent({
           </div>
           <!-- Registers -->
           <div v-if="activeTab === 'registers'">
-            <RegisterFileArch :register_file="architecture.components" />
+            <RegisterFileArch :register_file="architecture.register_files" />
           </div>
           <!-- Cache Memory Configuration -->
           <div v-if="activeTab === 'cache'">

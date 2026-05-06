@@ -55,8 +55,13 @@ f1:
 
 main: 
        # counting (matrix, 2, 6)
-       lui a0, matrix
-       lui a1, 2
-       lui a2, 6
+       li a0, matrix
+       li a1, 2
+       li a2, 6
+       addi sp, sp, -4
+       sw ra, 0(sp)
        jal ra, counting
+       lw ra, 0(sp)
+       addi sp, sp, 4
+       jr ra
 

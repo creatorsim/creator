@@ -25,11 +25,11 @@ templates:
         stopbit: 0
         order: 0
 
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - PC
         nbits: 8
@@ -41,9 +41,9 @@ components:
           - write
           - program_counter
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - A
         encoding: 0

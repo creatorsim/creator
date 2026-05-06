@@ -146,7 +146,7 @@ export default defineComponent({
                 <!-- View selector as tabs -->
                 <DataViewSelector
                   :data_mode="data_mode"
-                  :register_file_num="architecture.components.length"
+                  :register_file_num="architecture.register_files.length"
                   :dark="dark"
                   :enter="enter"
                   :architecture_name="architecture_name"
@@ -157,7 +157,7 @@ export default defineComponent({
                 <!-- Registers view -->
                 <RegisterFile
                   v-if="
-                    data_mode == 'int_registers' || data_mode == 'fp_registers' || data_mode == 'v_registers' || data_mode == 'csr_registers'
+                    data_mode == 'int' || data_mode == 'float' || data_mode == 'v_registers' || data_mode == 'csr_registers'
                   "
                   :data_mode="data_mode"
                   :reg_name_representation="reg_name_representation"

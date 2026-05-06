@@ -87,7 +87,7 @@ export class StackTracker {
     private static getCurrentStackPointer(): number {
         // find stack pointer register
         const sp = REGISTERS.flatMap(bank =>
-            bank.elements.filter(register =>
+            bank.registers.filter(register =>
                 // check it has the stack pointer property
                 register.properties.includes("stack_pointer"),
             ),

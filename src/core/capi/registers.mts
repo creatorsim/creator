@@ -39,7 +39,7 @@ export const REG = {
         const reg = crex_findReg(name);
         if (reg.match) {
             const nbits =
-                architecture.components[reg.indexComp!]!.elements[
+                architecture.register_files[reg.indexComp!]!.registers[
                     reg.indexElem!
                 ]!.nbits;
             writeRegister(

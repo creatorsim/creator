@@ -24,7 +24,7 @@
  */
 
 // Set of register keys that should be glowing
-// Key format: "bankIndex:registerIndex" (e.g., "0:5" for REGISTERS[0].elements[5])
+// Key format: "bankIndex:registerIndex" (e.g., "0:5" for REGISTERS[0].registers[5])
 const glowingRegisters = new Set();
 
 /**

@@ -154,7 +154,7 @@ export default defineComponent({
       <div v-if="currentView === 'registers'" class="data-section">
         <RegisterFile
           ref="registerFile"
-          :data_mode="'int_registers'"
+          :data_mode="'int'"
           :reg_name_representation="reg_name_representation"
           :dark="dark"
         />

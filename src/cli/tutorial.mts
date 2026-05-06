@@ -185,9 +185,9 @@ const tutorialSteps: TutorialStep[] = [
     },
     {
         title: "Examining Registers",
-        text: "Registers are small, fast storage locations in the CPU. RISC-V has 32 general-purpose registers (x0-x31).\n\nTo view the integer registers, use the 'reg' command.\n\nTry it now by typing 'reg int_registers':",
+        text: "Registers are small, fast storage locations in the CPU. RISC-V has 32 general-purpose registers (x0-x31).\n\nTo view the integer registers, use the 'reg' command.\n\nTry it now by typing 'reg int':",
         waitForCommand: true,
-        expectedCommand: "reg int_registers",
+        expectedCommand: "reg int",
         executeAfter() {
             console.log(
                 colorText(

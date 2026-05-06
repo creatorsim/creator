@@ -94,7 +94,7 @@ export let WORDSIZE;
 /** @type {number} */
 export let BYTESIZE;
 export let ENDIANNESSARR = [];
-/** @type {import("./core.d.ts").RegisterBank[]} */
+/** @type {import("./core.d.ts").RegisterFile[]} */
 export let REGISTERS;
 export const register_size_bits = 32; //TODO: load from architecture
 /** @type {Memory} */
@@ -188,8 +188,8 @@ export function loadArchitecture(architectureYaml, isa = []) {
         ENDIANNESSARR = endianness;
     }
 
-    REGISTERS = architecture.components;
-    status.pcRegisterNames = REGISTERS.flatMap(bank => bank.elements).find(
+    REGISTERS = architecture.register_files;
+    status.pcRegisterNames = REGISTERS.flatMap(bank => bank.registers).find(
         reg => reg.properties.includes("program_counter"),
     ).name;
     crex_clearRegisterCache();
@@ -374,7 +374,7 @@ export function reset() {
     // reset registers
     // Restore register default values
     for (const file of REGISTERS) {
-        for (const register of file.elements) {
+        for (const register of file.registers) {
             register.value = register.default_value
         }
     }
@@ -604,7 +604,7 @@ export function dumpRegister(register, format = "hex") {
 
     const result = crex_findReg(register);
     const registerSize =
-        REGISTERS[result.indexComp].elements[result.indexElem].nbits;
+        REGISTERS[result.indexComp].registers[result.indexElem].nbits;
 
     if (result.match === 1) {
         if (format === "hex") {
@@ -619,7 +619,7 @@ export function dumpRegister(register, format = "hex") {
             return twosComplement;
         } else if (format === "raw") {
             const value =
-                REGISTERS[result.indexComp].elements[
+                REGISTERS[result.indexComp].registers[
                     result.indexElem
                 ].value.toString(16);
             return value;
@@ -632,44 +632,29 @@ export function dumpRegister(register, format = "hex") {
 }
 
 export function getRegisterTypes() {
-    // Extract unique register types from architecture components
-    const registerTypes = REGISTERS.filter(component =>
-        component.type.includes("registers"),
-    ).map(component => component.type);
+    // Extract unique register types from architecture register files
+    const registerTypes = REGISTERS.map(file => file.type);
 
     return registerTypes;
 }
 
 export function getRegistersByBank(regType) {
-    // Find the component with the specified register type
-    const component = REGISTERS.find(comp => comp.type === regType);
-
-    if (!component) {
-        return null;
-    }
-
-    return {
-        name: component.name,
-        type: component.type,
-        elements: component.elements,
-        double_precision: component.double_precision,
-        double_precision_type: component.double_precision_type,
-    };
+    // Find the register file with the specified register type
+    const file = REGISTERS.find(comp => comp.type === regType);
+    return file? file : null;
 }
 
 export function getRegisterInfo(regName) {
-    // Find the register in all components
-    for (const component of REGISTERS) {
-        if (component.type.includes("registers")) {
-            for (const element of component.elements) {
-                // Check if this register matches by any of its names
-                if (element.name.includes(regName)) {
-                    return {
-                        ...element,
-                        type: component.type,
-                        nbits: element.nbits,
-                    };
-                }
+    // Find the register in all register files
+    for (const file of REGISTERS) {
+        for (const element of file.registers) {
+            // Check if this register matches by any of its names
+            if (element.name.includes(regName)) {
+                return {
+                    ...element,
+                    type: file.type,
+                    nbits: element.nbits,
+                };
             }
         }
     }

@@ -8,7 +8,7 @@
 .text
   main: 
         # shift
-        lui     a0, result1
+        li     a0, result1
         lb      a1, 0(a0)
         lh      a2, 0(a0)
         lw      a3, 0(a0)

@@ -54,8 +54,8 @@ export function crex_findReg(value1) {
     }
 
     for (let i = 0; i < REGISTERS.length; i++) {
-        for (let j = 0; j < REGISTERS[i].elements.length; j++) {
-            if (REGISTERS[i].elements[j].name.includes(value1) !== false) {
+        for (let j = 0; j < REGISTERS[i].registers.length; j++) {
+            if (REGISTERS[i].registers[j].name.includes(value1) !== false) {
                 ret.match = 1;
                 ret.indexComp = i;
                 ret.indexElem = j;
@@ -86,9 +86,9 @@ export function crex_findReg_bytag(value1) {
     }
 
     for (let i = 0; i < REGISTERS.length; i++) {
-        for (let j = 0; j < REGISTERS[i].elements.length; j++) {
+        for (let j = 0; j < REGISTERS[i].registers.length; j++) {
             if (
-                REGISTERS[i].elements[j].properties.includes(value1) !== false
+                REGISTERS[i].registers[j].properties.includes(value1) !== false
             ) {
                 ret.match = 1;
                 ret.indexComp = i;

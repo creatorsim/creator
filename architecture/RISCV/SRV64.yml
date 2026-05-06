@@ -44,11 +44,11 @@ extensions:
   Zicsr:
     description: RV32/RV64 Zicsr Standard Extension
     type: extension
-components:
+register_files:
   - name: Control registers
-    type: ctrl_registers
+    type: ctrl
     double_precision: false
-    elements:
+    registers:
       - name:
           - PC
         nbits: 64
@@ -60,9 +60,9 @@ components:
           - write
           - program_counter
   - name: Integer registers
-    type: int_registers
+    type: int
     double_precision: false
-    elements:
+    registers:
       - name:
           - x0
           - zero
@@ -400,9 +400,9 @@ components:
           - read
           - write
   - name: Floating point registers
-    type: fp_registers
+    type: float
     double_precision: true
-    elements:
+    registers:
       - name:
           - f0
           - ft0
@@ -738,7 +738,7 @@ components:
   - name: Vectorial registers
     type: v_registers
     double_precision: true
-    elements:
+    registers:
       - name:
           - v0
           - vt0
@@ -1062,7 +1062,7 @@ components:
   - name: Control state registers
     type: csr_registers
     double_precision: false
-    elements:
+    registers:
 # USER registers
       - name:
           - ustatus
@@ -2759,7 +2759,9 @@ instructions:
         - field: funct3
           value: "110"
       definition: |
-        registers[rd] = registers[rs1] % registers[rs2];
+        registers[rd] = CAPI.FP.int2uint(
+          CAPI.FP.uint2int(registers[rs1]) % CAPI.FP.uint2int(registers[rs2])
+        );
 
       help: Perform an XLEN-bit by XLEN-bit signed integer reminder of rs1 by rs2.
     - name: remu

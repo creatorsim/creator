@@ -52,7 +52,7 @@ export function readRegister(indexComp, indexElem) {
     };
 
     if (
-        REGISTERS[indexComp].elements[indexElem].properties.includes("read") !==
+        REGISTERS[indexComp].registers[indexElem].properties.includes("read") !==
         true
     ) {
         for (let i = 0; i < instructions.length; i++) {
@@ -63,25 +63,25 @@ export function readRegister(indexComp, indexElem) {
         throw packExecute(
             true,
             "The register " +
-                REGISTERS[indexComp].elements[indexElem].name.join(" | ") +
+                REGISTERS[indexComp].registers[indexElem].name.join(" | ") +
                 " cannot be read",
             "danger",
             null,
         );
     }
 
-    return BigInt(REGISTERS[indexComp].elements[indexElem].value);
+    return BigInt(REGISTERS[indexComp].registers[indexElem].value);
 }
 
 /**
- * Writes the specified value in the specified register, given its component and
- * index elements
+ * Writes the specified value in the specified register, given its register file and
+ * register indexes
  *
  * @param {bigint} value Value to write
- * @param {number} indexComp Index of the component/bank
- * @param {number} indexElem Index of the element
+ * @param {number} indexFile Index of the component/bank
+ * @param {number} indexReg Index of the element
  */
-export function writeRegister(value, indexComp, indexElem) {
+export function writeRegister(value, indexFile, indexReg) {
     const draw = {
         space: [],
         info: [],
@@ -103,8 +103,8 @@ export function writeRegister(value, indexComp, indexElem) {
         throw new Error("Called writeRegister with a number, not BigInt");
     }
 
-    const component = REGISTERS[indexComp];
-    const element = component.elements[indexElem];
+    const component = REGISTERS[indexFile];
+    const element = component.registers[indexReg];
     const properties = element.properties;
     const elementName = element.name.join(" | ");
     const stackStart = architecture.memory_layout.stack.start;
@@ -123,7 +123,7 @@ export function writeRegister(value, indexComp, indexElem) {
     }
 
     element.value = value;
-    sentinel.recordRegisterWrite(indexComp, indexElem);
+    sentinel.recordRegisterWrite(indexFile, indexReg);
 
     if (properties.includes("stack_pointer") && value !== stackStart) {
         writeStackLimit(value);
@@ -133,9 +133,9 @@ export function writeRegister(value, indexComp, indexElem) {
         // check if in RISC-V Sail has to be glowed the register by instruction execution
         if (architecture.config.name.includes("SRV")){
             if (userMode32 || userMode64 || userMode32vd)
-                notifyRegisterUpdate(indexComp, indexElem);
+                notifyRegisterUpdate(indexFile, indexReg);
         }else 
-            notifyRegisterUpdate(indexComp, indexElem);
+            notifyRegisterUpdate(indexFile, indexReg);
             
     }
 }
