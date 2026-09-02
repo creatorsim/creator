@@ -17,12 +17,17 @@
  * along with CREATOR.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { main_memory, stackTracker, BYTESIZE, REGISTERS } from "../core.mjs";
+import {
+    main_memory,
+    stackTracker,
+    deviceManager,
+    BYTESIZE,
+    REGISTERS,
+} from "../core.mjs";
 import { exit } from "../executor/executor.mjs";
 import { raise } from "./validation.mts";
 import { crex_findReg } from "../register/registerLookup.mjs";
 import { sentinel } from "../sentinel/sentinel.mts";
-import { checkDeviceAddr, devices } from "../executor/devices.mts";
 import type { Memory } from "../memory/Memory.mts";
 import { toHex } from "../utils/utils.mjs";
 
@@ -48,11 +53,7 @@ function writeValueToMemory(
     }
 
     // get memory
-    const deviceID = checkDeviceAddr(Number(address));
-    const memory =
-        deviceID === null
-            ? (main_memory as Memory)
-            : devices.get(deviceID)!.memory;
+    const memory = selectMemory(address);
 
     const wordSize = memory.getWordSize();
 
@@ -116,11 +117,7 @@ function writeValueToMemory(
  */
 function readValueFromMemory(address: bigint, bytes: number): bigint {
     // get memory
-    const deviceID = checkDeviceAddr(Number(address));
-    const memory =
-        deviceID === null
-            ? (main_memory as Memory)
-            : devices.get(deviceID)!.memory;
+    const memory = selectMemory(address);
 
     const wordSize = memory.getWordSize();
     if (bytes === 1) {
@@ -167,6 +164,17 @@ function readValueFromMemory(address: bigint, bytes: number): bigint {
     }
 }
 
+/**
+ * Selects the memory instance (main memory or device memory) depending on the
+ * address
+ */
+function selectMemory(address: bigint): Memory {
+    const deviceID = deviceManager.checkDeviceAddr(Number(address));
+    return deviceID === null
+        ? (main_memory as Memory)
+        : deviceManager.devices.get(deviceID)!.memory;
+}
+
 /*
  * Name:        mp_write - Write value into a memory address
  * Sypnosis:    mp_write (destination_address, value2store, byte_or_half_or_word)
@@ -182,12 +190,7 @@ export const MEM = {
         hint?: string,
         noSegFault: boolean = true,
     ): void {
-        // get memory
-        const deviceID = checkDeviceAddr(Number(address));
-        const memory =
-            deviceID === null
-                ? (main_memory as Memory)
-                : devices.get(deviceID)!.memory;
+        const memory = selectMemory(address);
 
         // Check if the address is in a writable segment using memory functions
         const segment = memory.getSegmentForAddress(address);
@@ -261,11 +264,7 @@ export const MEM = {
         noSegFault: boolean = true,
     ): bigint {
         // get memory
-        const deviceID = checkDeviceAddr(Number(address));
-        const memory =
-            deviceID === null
-                ? (main_memory as Memory)
-                : devices.get(deviceID)!.memory;
+        const memory = selectMemory(address);
 
         // Implementation of capi_mem_read
         let val = 0n;
@@ -339,11 +338,7 @@ export const MEM = {
      */
     addHint(address: bigint, hint: string, sizeInBits?: number): boolean {
         // get memory
-        const deviceID = checkDeviceAddr(Number(address));
-        const memory =
-            deviceID === null
-                ? (main_memory as Memory)
-                : devices.get(deviceID)!.memory;
+        const memory = selectMemory(address);
 
         try {
             memory.addHint(address, [], hint, sizeInBits);

@@ -19,14 +19,14 @@ along with CREATOR.  If not, see <http://www.gnu.org/licenses/>.
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
 import type { StackFrame } from "@/core/memory/StackTracker.mjs";
-import { architecture } from "@/core/core.mjs";
+import { architecture, deviceManager } from "@/core/core.mjs";
 import { main_memory } from "@/core/core";
-import { type Device, devices } from "@/core/executor/devices.mts";
 
 import RegisterFile from "../simulator/RegisterFile.vue";
 import HexViewer from "../simulator/HexViewer.vue";
 import Stats from "../simulator/Stats.vue";
 import Terminal from "../simulator/Terminal.vue";
+import type { Device } from "@/core/executor/DeviceManager.mjs";
 
 export default defineComponent({
   props: {
@@ -60,7 +60,7 @@ export default defineComponent({
     return {
       architecture,
       main_memory: main_memory as any,
-      devices: devices as Map<string, any>,
+      devices: deviceManager.devices as Map<string, Device>,
     };
   },
 

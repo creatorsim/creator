@@ -38,7 +38,7 @@ export const testKeyboard = {
     enable: false,
     /** @type {string[]} */
     data: [],
-}
+};
 
 export function display_print(info) {
     if (typeof document !== "undefined" && document.app) {
@@ -49,7 +49,8 @@ export function display_print(info) {
         if (typeof info !== "string") {
             info = info.toString();
         }
-        if (!testKeyboard.enable) // Don't print in tests
+        if (!testKeyboard.enable)
+            // Don't print in tests
             process.stdout.write(info);
     }
 
@@ -61,7 +62,8 @@ export function kbd_read_char(keystroke, params) {
     if (architecture.config.name.includes("SRV")) {
         sailexec._send_char_to_C(value);
 
-        document.app.$data.execution_mode_run = document.app.$data.last_execution_mode_run;
+        document.app.$data.execution_mode_run =
+            document.app.$data.last_execution_mode_run;
         document.app.$data.last_execution_mode_run = -1;
     }
     writeRegister(BigInt(value), params.indexComp, params.indexElem);
@@ -91,12 +93,21 @@ export function kbd_read_int(keystroke, params) {
     if (architecture.config.name.includes("SRV")) {
         sailexec._send_int_to_C(value);
 
-        document.app.$data.execution_mode_run = document.app.$data.last_execution_mode_run;
+        document.app.$data.execution_mode_run =
+            document.app.$data.last_execution_mode_run;
         document.app.$data.last_execution_mode_run = -1;
     }
+
     value = BigInt(value);
 
-    writeRegister(value, params.indexComp, params.indexElem);
+    const o =
+        architecture.register_files[params.indexComp].registers[
+            params.indexElem
+        ].nbits;
+    writeRegister(BigInt.asUintN(o, value), params.indexComp, params.indexElem);
+
+    //value = BigInt(value);
+    //writeRegister(value, params.indexComp, params.indexElem);
 
     return value;
 }
@@ -115,20 +126,23 @@ export function kbd_read_float(keystroke, params) {
     if (architecture.config.name.includes("SRV")) {
         sailexec._send_float_to_C(value);
 
-
-        document.app.$data.execution_mode_run = document.app.$data.last_execution_mode_run;
+        document.app.$data.execution_mode_run =
+            document.app.$data.last_execution_mode_run;
         document.app.$data.last_execution_mode_run = -1;
     }
 
     // If the current architecture has a write float specialization, use it.
     // Otherwise, fallback to writing the bits directly
     if (CAPI.ARCH.writeFloat !== undefined) {
-        const reg = architecture.register_files[params.indexComp].registers[params.indexElem]
-        CAPI.ARCH.writeFloat(value, reg.name[0])
-    } else  {
+        const reg =
+            architecture.register_files[params.indexComp].registers[
+                params.indexElem
+            ];
+        CAPI.ARCH.writeFloat(value, reg.name[0]);
+    } else {
         const buffer = new ArrayBuffer(4);
         const view = new DataView(buffer);
-        view.setFloat32(0,value, false);
+        view.setFloat32(0, value, false);
         const bits = BigInt(view.getUint32(0, false));
         writeRegister(bits, params.indexComp, params.indexElem);
     }
@@ -151,15 +165,19 @@ export function kbd_read_double(keystroke, params) {
     if (architecture.config.name.includes("SRV")) {
         sailexec._send_double_to_C(value);
 
-        document.app.$data.execution_mode_run = document.app.$data.last_execution_mode_run;
+        document.app.$data.execution_mode_run =
+            document.app.$data.last_execution_mode_run;
         document.app.$data.last_execution_mode_run = -1;
     }
     // If the current architecture has a write float specialization, use it.
     // Otherwise, fallback to writing the bits directly
     if (CAPI.ARCH.writeDouble !== undefined) {
-        const reg = architecture.register_files[params.indexComp].registers[params.indexElem]
-        CAPI.ARCH.writeDouble(value, reg.name[0])
-    } else  {
+        const reg =
+            architecture.register_files[params.indexComp].registers[
+                params.indexElem
+            ];
+        CAPI.ARCH.writeDouble(value, reg.name[0]);
+    } else {
         const buffer = new ArrayBuffer(8);
         const view = new DataView(buffer);
         view.setFloat64(0, value, false);
@@ -186,16 +204,16 @@ export function kbd_read_string(keystroke, params) {
 
         sailexec.stringToUTF8(keystroke, buffer, lengthBytes);
 
-        if (architecture.config.name === "SRV32"){
+        if (architecture.config.name === "SRV32") {
             sailexec._send_string_to_C(buffer);
             sailexec._free(buffer);
-        }
-        else{
+        } else {
             sailexec._send_string_to_C(BigInt(buffer));
             sailexec._free(BigInt(buffer));
         }
 
-        document.app.$data.execution_mode_run = document.app.$data.last_execution_mode_run;
+        document.app.$data.execution_mode_run =
+            document.app.$data.last_execution_mode_run;
         document.app.$data.last_execution_mode_run = -1;
     }
     return keystroke;
@@ -219,8 +237,8 @@ function checkEnter(buf) {
  */
 function rawPrompt() {
     if (testKeyboard.enable) {
-        const data = testKeyboard.data.shift() || ""
-        return data
+        const data = testKeyboard.data.shift() || "";
+        return data;
     }
     // Build input character by character until we hit Enter
     const chunks = [];
@@ -250,8 +268,6 @@ function rawPrompt() {
 
     return chunks.join("");
 }
-
-
 
 export function keyboard_parseInt(fn_post_read, fn_post_params) {
     const draw = {
@@ -298,18 +314,14 @@ export function keyboard_parseInt(fn_post_read, fn_post_params) {
         memoryAddr++;
     }
     //LOOKAHEAD values
-    if (target === "" || target =="SKIP_ALL") {
+    if (target === "" || target == "SKIP_ALL") {
         var regex = new RegExp("\\s*(-?\\d+)", "g"); //Search the first number (negative or not)
-    }
-    else if (target === "SKIP_NONE") {
+    } else if (target === "SKIP_NONE") {
         var regex = new RegExp("^(-?\\d+)");
-    }
-    else { // SKIP_WHITESPACE
+    } else {
+        // SKIP_WHITESPACE
         var regex = new RegExp("^\\s*(-?\\d+)");
-
     }
-
-
 
     // Deno / CLI mode
     if (typeof Deno !== "undefined") {
@@ -350,7 +362,11 @@ export function keyboard_parseInt(fn_post_read, fn_post_params) {
     if (match) {
         keystroke = match[1]; //Extracted number as string
         if (keystroke.includes("-")) {
-            writeRegister(BigInt.asIntN(keystroke), ret1.indexComp, ret1.indexElem);
+            writeRegister(
+                BigInt.asIntN(keystroke),
+                ret1.indexComp,
+                ret1.indexElem,
+            );
         }
         writeRegister(BigInt(keystroke), ret1.indexComp, ret1.indexElem);
     } else {
@@ -362,7 +378,6 @@ export function keyboard_parseInt(fn_post_read, fn_post_params) {
     // } else {
     //     writeRegister(0n, ret1.indexComp, ret1.indexElem);
     // }
-
 
     document.app.$data.keyboard = "";
     document.app.$data.enter = null;
@@ -399,7 +414,6 @@ export function keyboard_parseInt(fn_post_read, fn_post_params) {
 
     return draw;
 }
-
 
 export function keyboard_read(fn_post_read, fn_post_params) {
     const draw = {
@@ -454,8 +468,7 @@ export function keyboard_read(fn_post_read, fn_post_params) {
             null,
         );
     }
-    if (architecture.config.name.includes("SRV"))
-        return draw;
+    if (architecture.config.name.includes("SRV")) return draw;
     // If program was running before waiting for input, continue execution automatically
     if (status.run_program === 1) {
         // Trigger the play button to continue execution
@@ -476,7 +489,11 @@ export function keyboard_read(fn_post_read, fn_post_params) {
     return draw;
 }
 
-export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until) {
+export function keyboard_read_until(
+    fn_post_read,
+    fn_post_params,
+    fn_post_until,
+) {
     const draw = {
         space: [],
         info: [],
@@ -500,9 +517,8 @@ export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until)
         "type:",
         typeof until,
         "length:",
-        until?.length
+        until?.length,
     );
-
 
     // Check for Deno environment
     if (typeof Deno !== "undefined") {
@@ -513,7 +529,6 @@ export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until)
             if (idx !== -1) {
                 keystroke = keystroke.slice(0, idx);
             }
-
         }
         // console.log("Extracted keystroke until 'until':", `"${keystroke}"`);
         const value = fn_post_read(keystroke, fn_post_params);
@@ -527,7 +542,13 @@ export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until)
     document.app.$data.enter = false; // signal UI to wait for keyboard read
 
     if (status.run_program === 3) {
-        setTimeout(keyboard_read_until, 1000, fn_post_read, fn_post_params, fn_post_until);
+        setTimeout(
+            keyboard_read_until,
+            1000,
+            fn_post_read,
+            fn_post_params,
+            fn_post_until,
+        );
         return draw;
     }
 
@@ -541,20 +562,24 @@ export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until)
     }
 
     const funct_params = {
-            indexComp: fn_post_params.indexComp,
-            indexElem: fn_post_params.indexElem,
-            size: keystroke.length,
+        indexComp: fn_post_params.indexComp,
+        indexElem: fn_post_params.indexElem,
+        size: keystroke.length,
     };
 
     const val = fn_post_read(keystroke, funct_params);
-    writeRegister(BigInt(val.length), fn_post_params.indexComp, fn_post_params.indexElem);
+    writeRegister(
+        BigInt(val.length),
+        fn_post_params.indexComp,
+        fn_post_params.indexElem,
+    );
 
     document.app.$data.keyboard = ""; // clear input
 
     if (val === null) {
         // error parsing input, retry
         status.run_program = 3;
-        return keyboard_read_until(fn_post_read, fn_post_params,fn_post_until);
+        return keyboard_read_until(fn_post_read, fn_post_params, fn_post_until);
     }
 
     document.app.$data.enter = null; // reset keyboard
@@ -593,8 +618,12 @@ export function keyboard_read_until(fn_post_read, fn_post_params, fn_post_until)
     return draw;
 }
 
-
-export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,fn_post_until) {
+export function keyboard_read_find(
+    fn_post_read,
+    fn_post_params,
+    fn_post_length,
+    fn_post_until,
+) {
     const draw = {
         space: [],
         info: [],
@@ -656,7 +685,6 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
         }
     }
 
-
     // Resolve the until string from register if provided (serial_findUntil)
     let until = "";
     if (fn_post_until && fn_post_until.length > 0) {
@@ -671,7 +699,7 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
         }
         const addr_until = readRegister(ret2.indexComp, ret2.indexElem);
         // until = readMemory(parseInt(addr_until), "string");
-            // Validate address is within memory bounds
+        // Validate address is within memory bounds
         if (addr_until >= BigInt(memory.getSize())) {
             throw packExecute(
                 true,
@@ -683,21 +711,21 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
 
         // Read the target from memory
         memoryAddr = addr_until;
-            while (memoryAddr < BigInt(memory.getSize())) {
-                const byte = memory.read(memoryAddr);
-                if (byte === 0) break; // Null terminator
-                until += String.fromCharCode(byte);
-                memoryAddr++;
-            }
+        while (memoryAddr < BigInt(memory.getSize())) {
+            const byte = memory.read(memoryAddr);
+            if (byte === 0) break; // Null terminator
+            until += String.fromCharCode(byte);
+            memoryAddr++;
+        }
 
         // console.log("Until string: ", until);
-        }
+    }
 
     // Deno / CLI mode
     if (typeof Deno !== "undefined") {
         let keystroke = rawPrompt();
 
-        if (until && typeof until === "string" && until !== "" ) {
+        if (until && typeof until === "string" && until !== "") {
             const idx = keystroke.indexOf(until);
             if (idx !== -1) {
                 keystroke = keystroke.substring(0, idx);
@@ -708,8 +736,6 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
         } else {
             writeRegister(0n, ret1.indexComp, ret1.indexElem);
         }
-
-
 
         status.run_program = 0;
         return packExecute(
@@ -724,7 +750,14 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
     document.app.$data.enter = false; // wait for input
 
     if (status.run_program === 3) {
-        setTimeout(keyboard_read_find, 1000, fn_post_read, fn_post_params, fn_post_length,fn_post_until);
+        setTimeout(
+            keyboard_read_find,
+            1000,
+            fn_post_read,
+            fn_post_params,
+            fn_post_length,
+            fn_post_until,
+        );
         return draw;
     }
 
@@ -732,13 +765,18 @@ export function keyboard_read_find(fn_post_read, fn_post_params,fn_post_length,f
 
     if (!keystroke || keystroke.length === 0) {
         status.run_program = 3;
-        return keyboard_read_find(fn_post_read, fn_post_params, fn_post_length,fn_post_until);
+        return keyboard_read_find(
+            fn_post_read,
+            fn_post_params,
+            fn_post_length,
+            fn_post_until,
+        );
     }
 
     // Find logic
     // console.log("keystroke:", `"${keystroke}"`, keystroke.length);
     // console.log("until:", `"${until}"`, until.length);
-    if (until && typeof until === "string" && until !== "" ) {
+    if (until && typeof until === "string" && until !== "") {
         const idx = keystroke.indexOf(until);
         if (idx !== -1) {
             keystroke = keystroke.substring(0, idx);

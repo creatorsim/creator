@@ -114,11 +114,13 @@ type ArchitectureInterrupts = {
     global_disable: string;
     check: string;
     is_enabled?: string;
-    is_global_enabled: string;
+    is_global_enabled?: string;
     clear?: string;
     global_clear: string;
     create: string;
 };
+
+import type {  DeviceList } from "./executor/DeviceManager.mts";
 
 type Architecture = {
     config: {
@@ -153,6 +155,7 @@ type Architecture = {
         enable: string;
         disable: string;
     };
+    devices?: DeviceList;
 };
 export declare const architecture: Architecture;
 

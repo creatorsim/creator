@@ -20,9 +20,8 @@ along with CREATOR.  If not, see <http://www.gnu.org/licenses/>.
 import { defineComponent, type PropType } from "vue";
 
 import type { StackFrame } from "@/core/memory/StackTracker.mjs";
-import { architecture, loadedCreatino } from "@/core/core.mjs";
+import { architecture, deviceManager } from "@/core/core.mjs";
 import { main_memory } from "@/core/core";
-import { type Device, devices } from "@/core/executor/devices.mts";
 
 import TableExecution from "./simulator/TableExecution.vue";
 import DataViewSelector from "./simulator/DataViewSelector.vue";
@@ -34,6 +33,7 @@ import Terminal from "./simulator/Terminal.vue";
 import Stats from "./simulator/Stats.vue";
 import Flash from "./simulator/Flash.vue";
 import ArduinoTerminal from "./simulator/ArduinoTerminal.vue";
+import type { Device } from "@/core/executor/DeviceManager.mjs";
 
 export default defineComponent({
   props: {
@@ -76,7 +76,7 @@ export default defineComponent({
     Stats,
     Flash,
     Terminal,
-    ArduinoTerminal
+    ArduinoTerminal,
     // App
   },
 
@@ -84,7 +84,7 @@ export default defineComponent({
     return {
       architecture,
       main_memory: main_memory as any,
-      devices: devices as Map<string, any>,
+      devices: deviceManager.devices as Map<string, Device>,
     };
   },
 });
@@ -119,7 +119,7 @@ export default defineComponent({
 
         <!-- Calculator -->
         <Calculator id="calculator_simulator" />
-        
+
         <b-row align-h="center" class="simulator-main-row">
           <!-- Column 1: Execution instruction -->
           <b-col
@@ -157,7 +157,10 @@ export default defineComponent({
                 <!-- Registers view -->
                 <RegisterFile
                   v-if="
-                    data_mode == 'int' || data_mode == 'float' || data_mode == 'v_registers' || data_mode == 'csr_registers'
+                    data_mode == 'int' ||
+                    data_mode == 'float' ||
+                    data_mode == 'v_registers' ||
+                    data_mode == 'csr_registers'
                   "
                   :data_mode="data_mode"
                   :reg_name_representation="reg_name_representation"
@@ -191,7 +194,7 @@ export default defineComponent({
                   :enter="enter"
                   ref="terminal"
                 />
-                  <ArduinoTerminal
+                <ArduinoTerminal
                   v-if="data_mode === 'arduino'"
                   :display="display"
                   :keyboard="keyboard"

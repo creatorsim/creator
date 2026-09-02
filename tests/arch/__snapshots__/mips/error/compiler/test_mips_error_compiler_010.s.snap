@@ -3,40 +3,46 @@ export const snapshot = {};
 snapshot[`mips/error/compiler/test_mips_error_compiler_010.s 1`] = `
 {
   column: 17,
-  errorText: "[E16] Error: Data memory segment is full",
+  errorText: "[E16] Error: Data memory segment isn't big enough",
   line: 8,
 }
 `;
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_010.s 2`] = `
-"[E16] Error: Data memory segment is full
+"[E16] Error: Data memory segment isn't big enough
    ╭─[ assembly:8:17 ]
    │
  8 │     spa:    .space 16 * 1024 * 1024 * 1024
    │                    ───────────┬───────────  
    │                               ╰───────────── This element doesn't fit in the available space
+   │ 
+   │ Note: Element requires 17179869184 bytes, but only 94108864 are free
 ───╯
 "
 `;
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_010.s 3`] = `
-"<span style='color:var(--err-red,#a00)'>[E16] Error:</span> Data memory segment is full
+"<span style='color:var(--err-red,#a00)'>[E16] Error:</span> Data memory segment isn&#39;t big enough
    <span style='color:#949494'>╭─[</span> assembly:8:17 <span style='color:#949494'>]</span>
    <span style='color:#949494'>│</span>
  <span style='color:#949494'>8 │</span> <span style='color:#b2b2b2'>    spa:    .space </span><span style='color:var(--err-red,#a00)'>16 * 1024 * 1024 * 1024</span>
  <span style='color:#585858'>  │</span>                    <span style='color:var(--err-red,#a00)'>───────────┬───────────</span>  
  <span style='color:#585858'>  │</span>                               <span style='color:var(--err-red,#a00)'>╰─────────────</span> This element doesn&#39;t fit in the available space
+ <span style='color:#585858'>  │</span> 
+ <span style='color:#585858'>  │</span> <span style='color:#87d7af'>Note</span>: Element requires 17179869184 bytes, but only 94108864 are free
 <span style='color:#949494'>───╯</span>
 "
 `;
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_010.s 4`] = `
-"[31m[E16] Error:[0m Data memory segment is full
+"[31m[E16] Error:[0m Data memory segment isn't big enough
    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m assembly:8:17 [38;5;246m][0m
    [38;5;246m│[0m
  [38;5;246m8 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249ms[0m[38;5;249mp[0m[38;5;249ma[0m[38;5;249m:[0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m.[0m[38;5;249ms[0m[38;5;249mp[0m[38;5;249ma[0m[38;5;249mc[0m[38;5;249me[0m[38;5;249m [0m[31m1[0m[31m6[0m[31m [0m[31m*[0m[31m [0m[31m1[0m[31m0[0m[31m2[0m[31m4[0m[31m [0m[31m*[0m[31m [0m[31m1[0m[31m0[0m[31m2[0m[31m4[0m[31m [0m[31m*[0m[31m [0m[31m1[0m[31m0[0m[31m2[0m[31m4[0m
  [38;5;240m  │[0m                    [31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m┬[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m  
  [38;5;240m  │[0m                               [31m╰[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m[31m─[0m This element doesn't fit in the available space
+ [38;5;240m  │[0m 
+ [38;5;240m  │[0m [38;5;115mNote[0m: Element requires 17179869184 bytes, but only 94108864 are free
 [38;5;246m───╯[0m
 "
 `;

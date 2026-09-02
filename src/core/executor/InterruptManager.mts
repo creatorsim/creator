@@ -180,14 +180,19 @@ class ArchitectureInterruptHandler extends InterruptHandler {
 
     public globalClear = this.#makeInjectedFunction(this.#config.global_clear);
 
-    public isGlobalEnabled = this.#makeInjectedFunction(
-        this.#config.is_global_enabled,
-    );
+    public isGlobalEnabled =
+        // eslint-disable-next-line eqeqeq
+        this.#config.is_global_enabled == null // covers for undefined
+            ? (..._args: unknown[]) => {
+                  return true;
+              }
+            : this.#makeInjectedFunction(this.#config.is_global_enabled);
 
-    public isEnabled = this.#makeInjectedFunction(
-        "type",
-        this.#config.is_enabled ?? this.#config.is_global_enabled,
-    );
+    public isEnabled =
+        // eslint-disable-next-line eqeqeq
+        this.#config.is_enabled == null  // covers for undefined
+            ? this.isGlobalEnabled
+            : this.#makeInjectedFunction("type", this.#config.is_enabled);
 
     public check = this.#makeInjectedFunction(this.#config.check);
 
@@ -290,7 +295,7 @@ export class InterruptManager {
     /** Checks if a type of interrupt is globally enabled */
     public isGlobalEnabled(): boolean {
         this.handler.isGlobalEnabled(this.status);
-        return this.status.globalEnabled ;
+        return this.status.globalEnabled;
     }
 
     /** Clears a specific interrupt type */
@@ -386,6 +391,7 @@ export class InterruptManager {
         [...this.status.enabled.keys()].forEach(key => {
             this.status.enabled.set(key, true);
         });
+        this.status.globalEnabled = true
 
         this.#syncEnabledInterrupts();
 

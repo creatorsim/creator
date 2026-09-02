@@ -744,8 +744,8 @@ export function processArchitectureFromYaml(architectureYaml, isa = []) {
     // validate schema
     if (!validateArchSchema(architectureObj)) {
         return {
-            errorcode: "invalid_schema",
-            token: "Invalid Schema",
+            errorcode: "invalid_arch",
+            token: "Invalid architecture",
             type: "error",
             update: "",
             status: "ko",

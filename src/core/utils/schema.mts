@@ -36,6 +36,12 @@ export function validateSchema(object: object, schema: object): boolean {
     // we need to do this, else the validator screams
     delete (schema as unknown as { $schema?: string }).$schema;
 
-    const validator = new Ajv().compile(schema);
-    return validator(object);
+    try {
+        const validator = new Ajv().compile(schema);
+        return validator(object);
+    }
+    catch (error) {
+        throw new Error(`Invalid JSON schema: ${error}`)
+    }
+
 }

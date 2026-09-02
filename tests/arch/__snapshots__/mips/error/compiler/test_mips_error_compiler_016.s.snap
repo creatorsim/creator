@@ -2,7 +2,7 @@ export const snapshot = {};
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_016.s 1`] = `
 {
-  column: 32,
+  column: 33,
   errorText: "Compilation error",
   line: 8,
 }
@@ -10,39 +10,39 @@ snapshot[`mips/error/compiler/test_mips_error_compiler_016.s 1`] = `
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_016.s 2`] = `
 'Error: Unterminated string literal
-   ╭─[ assembly:8:32 ]
+   ╭─[ assembly:8:33 ]
    │
  8 │     example:    .ascii hello world"
-   │                              ───┬─┬  
-   │                                 ╰──── While parsing this identifier
-   │                                   │  
-   │                                   ╰── Caused by this
+   │                                   ┬┬  
+   │                                   ╰─── While parsing this string
+   │                                    │  
+   │                                    ╰── Caused by this
 ───╯
 '
 `;
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_016.s 3`] = `
 "<span style='color:var(--err-red,#a00)'>Error:</span> Unterminated string literal
-   <span style='color:#949494'>╭─[</span> assembly:8:32 <span style='color:#949494'>]</span>
+   <span style='color:#949494'>╭─[</span> assembly:8:33 <span style='color:#949494'>]</span>
    <span style='color:#949494'>│</span>
- <span style='color:#949494'>8 │</span> <span style='color:#b2b2b2'>    example:    .ascii hello </span><span style='color:var(--err-yellow,#a60)'>world</span><span style='color:var(--err-red,#a00)'>&quot;</span>
- <span style='color:#585858'>  │</span>                              <span style='color:var(--err-yellow,#a60)'>───┬─</span><span style='color:var(--err-red,#a00)'>┬</span>  
- <span style='color:#585858'>  │</span>                                 <span style='color:var(--err-yellow,#a60)'>╰────</span> While parsing this <span style='color:var(--err-yellow,#a60)'>identifier</span>
- <span style='color:#585858'>  │</span>                                   <span style='color:var(--err-red,#a00)'>│</span>  
- <span style='color:#585858'>  │</span>                                   <span style='color:var(--err-red,#a00)'>╰──</span> Caused by this
+ <span style='color:#949494'>8 │</span> <span style='color:#b2b2b2'>    example:    .ascii hello world</span><span style='color:var(--err-yellow,#a60)'>&quot;</span>
+ <span style='color:#585858'>  │</span>                                   <span style='color:var(--err-yellow,#a60)'>┬</span><span style='color:var(--err-red,#a00)'>┬</span>  
+ <span style='color:#585858'>  │</span>                                   <span style='color:var(--err-yellow,#a60)'>╰───</span> While parsing this <span style='color:var(--err-yellow,#a60)'>string</span>
+ <span style='color:#585858'>  │</span>                                    <span style='color:var(--err-red,#a00)'>│</span>  
+ <span style='color:#585858'>  │</span>                                    <span style='color:var(--err-red,#a00)'>╰──</span> Caused by this
 <span style='color:#949494'>───╯</span>
 "
 `;
 
 snapshot[`mips/error/compiler/test_mips_error_compiler_016.s 4`] = `
 '[31mError:[0m Unterminated string literal
-   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m assembly:8:32 [38;5;246m][0m
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m assembly:8:33 [38;5;246m][0m
    [38;5;246m│[0m
- [38;5;246m8 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249me[0m[38;5;249mx[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249ml[0m[38;5;249me[0m[38;5;249m:[0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m.[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mc[0m[38;5;249mi[0m[38;5;249mi[0m[38;5;249m [0m[38;5;249mh[0m[38;5;249me[0m[38;5;249ml[0m[38;5;249ml[0m[38;5;249mo[0m[38;5;249m [0m[33mw[0m[33mo[0m[33mr[0m[33ml[0m[33md[0m[31m"[0m
- [38;5;240m  │[0m                              [33m─[0m[33m─[0m[33m─[0m[33m┬[0m[33m─[0m[31m┬[0m  
- [38;5;240m  │[0m                                 [33m╰[0m[33m─[0m[33m─[0m[33m─[0m[33m─[0m While parsing this [33midentifier[0m
- [38;5;240m  │[0m                                   [31m│[0m  
- [38;5;240m  │[0m                                   [31m╰[0m[31m─[0m[31m─[0m Caused by this
+ [38;5;246m8 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249me[0m[38;5;249mx[0m[38;5;249ma[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249ml[0m[38;5;249me[0m[38;5;249m:[0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m.[0m[38;5;249ma[0m[38;5;249ms[0m[38;5;249mc[0m[38;5;249mi[0m[38;5;249mi[0m[38;5;249m [0m[38;5;249mh[0m[38;5;249me[0m[38;5;249ml[0m[38;5;249ml[0m[38;5;249mo[0m[38;5;249m [0m[38;5;249mw[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249ml[0m[38;5;249md[0m[33m"[0m
+ [38;5;240m  │[0m                                   [33m┬[0m[31m┬[0m  
+ [38;5;240m  │[0m                                   [33m╰[0m[33m─[0m[33m─[0m[33m─[0m While parsing this [33mstring[0m
+ [38;5;240m  │[0m                                    [31m│[0m  
+ [38;5;240m  │[0m                                    [31m╰[0m[31m─[0m[31m─[0m Caused by this
 [38;5;246m───╯[0m
 '
 `;

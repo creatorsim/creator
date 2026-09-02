@@ -79,6 +79,15 @@ export const FP = {
         return checkTypeIEEE(sign, exponent, mantissa);
     },
 
+    /**
+     * Checks whether a `size` bits value fits in `target` bits
+     */
+    check_int_size(x: bigint | null, size: number, target: number): boolean {
+        return (
+            x !== null && BigInt.asIntN(size, x) === BigInt.asIntN(target, x)
+        );
+    },
+
     float2bin(f: number): string {
         return float2bin(f);
     },

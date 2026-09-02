@@ -17,13 +17,6 @@
       "description": "Architecture version",
       "type": "string"
     },
-    "register_files": {
-      "description": "Register files of the architecture",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/RegisterFile"
-      }
-    },
     "config": {
       "description": "Metadata about the architecture",
       "allOf": [
@@ -31,6 +24,13 @@
           "$ref": "#/definitions/Config"
         }
       ]
+    },
+    "devices": {
+      "description": "Device configuration",
+      "type": ["array", "null"],
+      "items": {
+        "$ref": "#/definitions/Device"
+      }
     },
     "directives": {
       "description": "Directives allowed",
@@ -106,6 +106,13 @@
         }
       }
     },
+    "register_files": {
+      "description": "Register files of the architecture",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RegisterFile"
+      }
+    },
     "timer": {
       "description": "Timer configuration",
       "anyOf": [
@@ -154,70 +161,11 @@
         }
       ]
     },
-    "RegisterFile": {
-      "description": "Register file",
-      "type": "object",
-      "required": ["double_precision", "registers", "name", "type"],
-      "properties": {
-        "double_precision": {
-          "description": "Whether the registers have double the word size",
-          "type": "boolean"
-        },
-        "registers": {
-          "description": "Registers in this file",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Register"
-          }
-        },
-        "name": {
-          "description": "Name of the register file",
-          "type": "string"
-        },
-        "type": {
-          "description": "Type of the registers",
-          "allOf": [
-            {
-              "$ref": "#/definitions/RegisterType"
-            }
-          ]
-        }
-      }
-    },
-    "RegisterType": {
-      "description": "Types of register files allowed",
-      "oneOf": [
-        {
-          "description": "Control registers",
-          "type": "string",
-          "enum": ["ctrl"]
-        },
-        {
-          "description": "Integer registers",
-          "type": "string",
-          "enum": ["int"]
-        },
-        {
-          "description": "Floating point registers",
-          "type": "string",
-          "enum": ["float"]
-        },
-        {
-          "description": "Vector registers",
-          "type": "string",
-          "enum": ["v_registers"]
-        },
-        {
-          "description": "Control state registers",
-          "type": "string",
-          "enum": ["csr_registers"]
-        }
-      ]
-    },
     "Config": {
       "description": "Architecture metadata attributes",
       "type": "object",
       "required": [
+        "comment_prefix",
         "description",
         "endianness",
         "main_function",
@@ -309,6 +257,50 @@
           }
         }
       }
+    },
+    "Device": {
+      "type": "object",
+      "required": ["cls", "ctrl_addr", "data", "id", "status_addr"],
+      "properties": {
+        "cls": {
+          "description": "Device class",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DeviceClasses"
+            }
+          ]
+        },
+        "ctrl_addr": {
+          "description": "Device's control register's address",
+          "type": "integer",
+          "minimum": 0.0
+        },
+        "data": {
+          "description": "Device's data segment",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Range_of_Integer"
+            }
+          ]
+        },
+        "enabled": {
+          "description": "Device's default status (default: enabled)",
+          "type": ["boolean", "null"]
+        },
+        "id": {
+          "description": "Device ID",
+          "type": "string"
+        },
+        "status_addr": {
+          "description": "Device's status register's address",
+          "type": "integer",
+          "minimum": 0.0
+        }
+      }
+    },
+    "DeviceClasses": {
+      "type": "string",
+      "enum": ["ConsoleDevice", "OSDriver"]
     },
     "Assembler": {
       "description": "CREATOR Assembler",
@@ -523,6 +515,7 @@
         "nwords": {
           "description": "Size of the instruction",
           "type": "integer",
+
           "minimum": 0.0
         },
         "properties": {
@@ -1164,7 +1157,6 @@
         "Function call",
         "Transfer between registers",
         "Memory access",
-        "Vector Set Length Instruction with an inmediate",
         "Other"
       ]
     },
@@ -1194,12 +1186,11 @@
         "global_clear",
         "global_disable",
         "global_enable",
-        "handlers",
-        "is_global_enabled"
+        "handlers"
       ],
       "properties": {
         "check": {
-          "description": "JS code to be executed in order to check what type of interrupt ocurred. It must return an `InterruptType` (if an interrupt happened) or `null` (if it didn't)",
+          "description": "JS code to be executed in order to check what type of interrupt occurred. It must return an `InterruptType` (if an interrupt happened) or `null` (if it didn't)",
           "type": "string"
         },
         "clear": {
@@ -1243,8 +1234,8 @@
           "type": ["string", "null"]
         },
         "is_global_enabled": {
-          "description": "JS code to check whether interrupts are globally is enabled. Must return a boolean",
-          "type": "string"
+          "description": "JS code to check whether interrupts are globally is enabled. Must return a boolean. If not specified, always returns `true`",
+          "type": ["string", "null"]
         }
       }
     },
@@ -1343,7 +1334,7 @@
       "required": ["definition", "name"],
       "properties": {
         "definition": {
-          "description": "Code to execute for the instruction",
+          "description": "Pseudoinstruction expansion definition. Can be either a instruction sequence template or a `JS` function\n\n# Instruction Sequence Form\n\nA string containing a newline/semicolon separated list of assembly instructions. Each instruction will be assembled as if it was specified by the user.\n\nIdentifiers in sub-expressions that match the name of one of the pseudoinstruction's fields will be automatically replaced with the corresponding argument's value. This allows forwarding the arguments and manipulation of the arguments within expressions. Forward references are supported when using this form.\n\n# Function Form\n\nA `JS` function body prefixed by `js:\\n`. The signature of this function should be:\n\n```ts\n(pc: bigint, args: Array<number | bigint | string | null>) => string\n```\n\nWhere:\n\n- `pc`: address in which the pseudoinstruction is being assembled into\n- `args`: array of evaluated pseudoinstruction arguments in the order they appear in the assembly syntax, where `number` is used for expressions that evaluate to a float, `bigint` for those that evaluate to an integer, `string` for simple identifiers (register names) and `null` for those that can't be evaluated (expressions containing undefined labels/forward references)\n- The returned string must be the definition in instruction sequence form\n- The function is allowed to throw any `JS` value that can be converted to a string, which will be displayed in error messages",
           "type": "string"
         },
         "fields": {
@@ -1375,14 +1366,10 @@
       "required": ["end", "start"],
       "properties": {
         "end": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 18446744073709551615
+          "type": "integer"
         },
         "start": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 18446744073709551615
+          "type": "integer"
         }
       }
     },
@@ -1421,6 +1408,63 @@
         "value": {
           "description": "Current value of the register",
           "type": "number"
+        }
+      }
+    },
+    "RegisterFile": {
+      "description": "Register file",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "Control registers",
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["ctrl"]
+            }
+          }
+        },
+        {
+          "description": "Integer registers",
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["int"]
+            }
+          }
+        },
+        {
+          "description": "Floating point registers",
+          "type": "object",
+          "required": ["double_precision", "type"],
+          "properties": {
+            "double_precision": {
+              "description": "Whether the registers have double the word size",
+              "type": "boolean"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["float"]
+            }
+          }
+        }
+      ],
+      "required": ["name", "registers"],
+      "properties": {
+        "name": {
+          "description": "Name of the register file",
+          "type": "string"
+        },
+        "registers": {
+          "description": "Registers in this file",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Register"
+          }
         }
       }
     },

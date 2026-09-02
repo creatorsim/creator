@@ -26,6 +26,13 @@ import { MEM } from "../capi/memory.mts";
 import { Memory, type MemoryBackup } from "../memory/Memory.mts";
 import { coreEvents, CoreEventTypes } from "../events.mts";
 
+type DeviceConfig = {
+    ctrl_addr: number;
+    status_addr: number;
+    data: { start: number; end: number };
+    enabled?: boolean;
+};
+
 /**
  * A CREATOR device.
  *
@@ -47,31 +54,26 @@ export abstract class Device {
     memory: Memory;
     private memoryBackup: MemoryBackup;
 
-    constructor(
-        // we use destructuring in order to have a cleaner interface later
-        {
-            ctrl_addr,
-            status_addr,
-            data: { start, end },
-            enabled = true,
-        }: {
-            ctrl_addr: number;
-            status_addr: number;
-            data: { start: number; end: number };
-            enabled: boolean;
-        },
-    ) {
-        this.ctrl_addr = ctrl_addr;
-        this.status_addr = status_addr;
-        this.data = { start, end };
-        this.enabled = enabled;
+    constructor(config: DeviceConfig) {
+        this.ctrl_addr = config.ctrl_addr;
+        this.status_addr = config.status_addr;
+        this.data = config.data;
+        this.enabled = config.enabled ?? true;
 
         // TODO: check it doesn't conflict w/ main memory... or maybe not...?
 
         // we don't know if ctrl_addr & status_addr will be lower or higher
         // than the data segment... so we'll have to handle that
-        const minAddr = Math.min(start, ctrl_addr, status_addr);
-        const maxAddr = Math.max(end, ctrl_addr, status_addr);
+        const minAddr = Math.min(
+            config.data.start,
+            config.ctrl_addr,
+            config.status_addr,
+        );
+        const maxAddr = Math.max(
+            config.data.end,
+            config.ctrl_addr,
+            config.status_addr,
+        );
 
         this.memory = new Memory({
             sizeInBytes: maxAddr - minAddr + 1,
@@ -251,7 +253,7 @@ class ConsoleDevice extends Device {
                 }
 
                 // Decode the UTF-8 data to a string
-                const buffer = new Uint8Array(bytes)
+                const buffer = new Uint8Array(bytes);
                 const msg = new TextDecoder().decode(buffer);
                 this.#write(msg, DataType.String);
 
@@ -385,84 +387,94 @@ class OSDriver extends Device {
     }
 }
 
-// TODO: device handler class
-// TODO: Enable/Disable devices
-// TODO: configure devices from arch definition
+// list of available devices
+const AvailableDevices: Record<string, new (cfg: DeviceConfig) => Device> = {
+    ConsoleDevice,
+    OSDriver,
+};
 
-// { <id>: Device, ...}
-export const devices = new Map<string, Device>([
-    [
-        "console",
-        new ConsoleDevice({
-            ctrl_addr: 0xf0000000,
-            status_addr: 0xf0000004,
-            data: {
-                start: 0xf0000008,
-                end: 0xf000000f,
-            },
-            enabled: true,
-        }),
-    ],
-    [
-        "os",
-        new OSDriver({
-            ctrl_addr: 0xf0000010,
-            status_addr: 0xf0000014,
-            data: {
-                start: 0xf0000018,
-                end: 0xf000001f,
-            },
-            enabled: true,
-        }),
-    ],
-]);
 
-/* Memory */
+export type DeviceList = ({ id: string; cls: string } & DeviceConfig)[];
 
-/**
- * Checks if an address is a device address.
- *
- * @param addr Address to check.
- *
- * @return ID of the device that the address belongs to, else `null`.
- */
-export function checkDeviceAddr(addr: number): string | null {
-    for (const [id, device] of devices) {
-        if (!device.enabled) continue;
+export class DeviceManager {
+    constructor(devices: DeviceList) {
+        for (const { id, cls, ...cfg } of devices) {
+            // get device type
+            const DeviceClass = AvailableDevices[cls];
+            if (!DeviceClass) {
+                throw new Error(`Invalid device class '${cls}'`);
+            }
 
-        if (device.isDeviceAddr(addr)) return id;
+            this.devices.set(id, new DeviceClass(cfg));
+        }
     }
 
-    return null;
-}
+    public devices = new Map<string, Device>();
 
-/* Handlers */
+    /* Memory */
 
-/**
- * 'Wakes up' a device, by executing its callback function.
- *
- * @param id ID of the device.
- *
- */
-export function wakeDevice(id: string): void {
-    const device = devices.get(id);
-    if (device !== undefined) device.handler();
-}
+    /**
+     * Checks if an address is a device address.
+     *
+     * @param addr Address to check.
+     *
+     * @return ID of the device that the address belongs to, else `null`.
+     */
+    public checkDeviceAddr(addr: number): string | null {
+        for (const [id, device] of this.devices) {
+            if (!device.enabled) continue;
 
-/**
- * Calls all the devices' handlers.
- */
-export function handleDevices(): void {
-    for (const [_id, device] of devices) {
-        if (device.enabled) device.handler();
+            if (device.isDeviceAddr(addr)) return id;
+        }
+
+        return null;
     }
-}
 
-/**
- * Resets all the devices.
- */
-export function resetDevices(): void {
-    for (const [_id, device] of devices) {
-        device.reset();
+    /* Handlers */
+
+    /**
+     * Calls all the devices' handlers.
+     */
+    public handleDevices(): void {
+        for (const [_id, device] of this.devices) {
+            if (device.enabled) device.handler();
+        }
+    }
+
+    /**
+     * Resets all the devices.
+     */
+    public resetDevices(): void {
+        for (const [_id, device] of this.devices) {
+            device.reset();
+        }
+    }
+
+    /**
+     * Enables the specified device
+     *
+     * @param id ID of the device to enable
+     */
+    public enableDevice(id: string) {
+        const dev = this.devices.get(id);
+        if (!dev) {
+            throw new Error(`Invalid device ID '${id}'`);
+        }
+
+        dev.enabled = true;
+    }
+
+    /**
+     * Disables the specified device
+     *
+     * @param id ID of the device to disable
+     */
+    public disableDevice(id: string) {
+        const dev = this.devices.get(id);
+        if (!dev) {
+            throw new Error(`Invalid device ID '${id}'`);
+        }
+
+        dev.enabled = false;
     }
 }

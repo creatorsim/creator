@@ -19,7 +19,7 @@ along with CREATOR.  If not, see <http://www.gnu.org/licenses/>.
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
 import type { Memory } from "@/core/memory/Memory.mjs";
-import type { Device } from "@/core/executor/devices.mjs";
+import type { Device } from "@/core/executor/DeviceManager.mjs";
 import { coreEvents } from "../../../core/events.mts";
 import {
   stackTracker,

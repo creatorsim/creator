@@ -3822,14 +3822,8 @@ pseudoinstructions:
         - field: addr
           type: imm-unsigned
       definition: |
-        no_ret_op{
-          tmp = Field.2.(31,0).int - (reg.pc - 4);
-          tmp_low = tmp & 0x00000FFF;
-          tmp_low = tmp_low>0x7FF? tmp_low - 0x1000 : tmp_low;
-          tmp_hi = (tmp - tmp_low) >> 12;
-        };
-        auipc rd, op{tmp_hi};
-        addi rd, rd, op{tmp_low};
+        auipc rd, %hi(addr - .);
+        addi rd, rd, %lo(addr - (. - 4));
 
     - name: li
       fields:
@@ -3839,19 +3833,13 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |
-        no_ret_op{
-          tmp = Field.2.(31,0).int;
-          tmp_low = tmp & 0x00000FFF;
-          tmp_low -= tmp_low > 0x7FF ? 0x1000 : 0;
-          tmp_hi = (tmp - tmp_low) >>> 12;
-        };
-        if (tmp_hi === 0) {
-          addi rd, x0, op{tmp_low};
-        }
-        else {
-          lui rd, op{tmp_hi};
-          addi rd, rd, op{tmp_low};
-        };
+        js:
+        const val = args[1];
+        if (CAPI.FP.check_int_size(val, 32, 12)) return "addi rd, x0, %lo(val)";
+        return `
+          lui rd, %hi(val);
+          addi rd, rd, %lo(val);
+        `
       help: Load the sign-extended 6-bit immediate, imm, into register rd.
 
     - name: mv
@@ -4171,3 +4159,22 @@ timer:
     registers.mie |= 2n ** 7n; // MTIE = 1
   disable: |
     registers.mie &= ~(2n ** 7n); // MTIE = 0
+
+devices:
+  - id: console
+    cls: ConsoleDevice
+    ctrl_addr: 0xf0000000
+    status_addr: 0xf0000004
+    data:
+      start: 0xf0000008
+      end: 0xf000000f
+    enabled: true
+
+  - id: os
+    cls: OSDriver
+    ctrl_addr: 0xf0000010
+    status_addr: 0xf0000014
+    data:
+      start: 0xf0000018
+      end: 0xf000001f
+    enabled: true

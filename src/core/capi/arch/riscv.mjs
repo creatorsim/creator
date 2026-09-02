@@ -20,23 +20,13 @@
 import { bi_BigIntTofloat, bi_BigIntTodouble } from "@/core/utils/bigint.mjs";
 
 function isInt(val, bits) {
-    const max = (1n << BigInt(bits - 1)) - 1n;
-    const min = -(1n << BigInt(bits - 1));
-    return BigInt(val) >= min && BigInt(val) <= max;
+    return val === BigInt.asIntN(bits, val);
 }
 
-function signExtend(val, bits) {
-    const mask = (1n << BigInt(bits)) - 1n;
-    const signBit = 1n << (BigInt(bits) - 1n);
-    const value = BigInt(val) & mask;
-    return value & signBit ? value | ~mask : value;
-}
-
-function countTrailingZeros(val) {
-    if (val === 0n) return 64;
+function countTrailingZeros(value) {
+    if (value === 0n) return 64;
 
     let count = 0;
-    let value = BigInt(val);
     while ((value & 1n) === 0n) {
         count++;
         value >>= 1n;
@@ -48,7 +38,7 @@ function generateInstructionsImpl(value, instructions, destReg) {
     // Handle 32-bit values with LUI+ADDI sequence
     if (isInt(value, 32)) {
         const hi20 = Number(((value + 0x800n) >> 12n) & 0xfffffn);
-        const lo12 = Number(signExtend(value, 12));
+        const lo12 = Number(BigInt.asIntN(12, value));
 
         if (hi20) {
             instructions.push(`lui ${destReg}, 0x${hi20.toString(16)}`);
@@ -63,8 +53,8 @@ function generateInstructionsImpl(value, instructions, destReg) {
     }
 
     // Handle larger values (RV64)
-    const lo12 = Number(signExtend(value, 12));
-    let remainingValue = value - BigInt(lo12);
+    const lo12 = BigInt.asIntN(12, value);
+    let remainingValue = value - lo12;
 
     // Check if shifting can simplify the representation
     let shift = 0;
@@ -103,7 +93,7 @@ function generateInstructionsImpl(value, instructions, destReg) {
 export const ARCH = {
     generateLoadImmediate(val, destReg) {
         const instructions = [];
-        generateInstructionsImpl(BigInt(val), instructions, destReg);
+        generateInstructionsImpl(BigInt.asIntN(64, val), instructions, destReg);
         return instructions.join(";");
     },
     toJSNumberD(bigIntValue) {

@@ -890,6 +890,16 @@ memory_layout:
     start: 0x0FFFFFFC
     end: 0x0FFFFFFF
 
+modifiers:
+  hi:
+    lower_signed: true
+    output_signed: false
+    range: [12, 32]
+  lo:
+    lower_signed: false
+    output_signed: true
+    range: [0, 12]
+
 templates:
   - name: B
     type: Conditional bifurcation
@@ -4032,14 +4042,8 @@ pseudoinstructions:
         - field: addr
           type: imm-unsigned
       definition: |
-        no_ret_op{
-          tmp = Field.2.(31,0).int - (reg.pc - 4);
-          tmp_low = tmp & 0x00000FFF;
-          tmp_low = tmp_low>0x7FF? tmp_low - 0x1000 : tmp_low;
-          tmp_hi = (tmp - tmp_low) >> 12;
-        };
-        auipc rd, op{tmp_hi};
-        addi rd, rd, op{tmp_low};
+        auipc rd, %hi(addr - .);
+        addi rd, rd, %lo(addr - (. - 4));
 
     - name: li
       fields:
@@ -4050,11 +4054,10 @@ pseudoinstructions:
           type: imm-signed
       # For legibility purposes, the implementation is included in the CREATOR codebase as a module.
       definition: |
-        no_ret_op{
-          value = Field.2.(63,0).int;
-          res_instructions = CAPI.ARCH.generateLoadImmediate(value, reg_name{1});
-        };
-        op{res_instructions};
+        js:
+        const val = args[1];
+        if (val === null) throw "Invalid `val` expression.\nNote: Forward references aren't allowed";
+        return CAPI.ARCH.generateLoadImmediate(val, "rd");
 
     - name: mv
       fields:
@@ -4373,3 +4376,22 @@ timer:
     registers.mie |= 2n ** 7n; // MTIE = 1
   disable: |
     registers.mie &= ~(2n ** 7n); // MTIE = 0
+
+devices:
+  - id: console
+    cls: ConsoleDevice
+    ctrl_addr: 0xf0000000
+    status_addr: 0xf0000004
+    data:
+      start: 0xf0000008
+      end: 0xf000000f
+    enabled: true
+
+  - id: os
+    cls: OSDriver
+    ctrl_addr: 0xf0000010
+    status_addr: 0xf0000014
+    data:
+      start: 0xf0000018
+      end: 0xf000001f
+    enabled: true

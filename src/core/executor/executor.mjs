@@ -19,8 +19,10 @@
 
 import { instructions, tag_instructions } from "../assembler/assembler.mjs";
 import {
+    architecture,
     status,
     interruptManager,
+    deviceManager,
     WORDSIZE,
     BYTESIZE,
     main_memory,
@@ -43,12 +45,10 @@ import { getPrimaryKey } from "../utils/utils.mjs";
 import { decode } from "./decoder.mjs";
 import { updateStats } from "./stats.mts";
 import { ExecutionMode } from "./InterruptManager.mts";
-import { handleDevices } from "./devices.mts";
 import { handleTimer } from "./timers.mts";
 import { compileInstruction } from "./instructionCompiler.mts";
 import { coreEvents } from "../events.mts";
 import { clearAllRegisterGlows } from "../register/registerGlowState.mjs";
-import { architecture } from "../core.mjs";
 
 const instructionCache = new Map();
 const compiledFunctions = new Map();
@@ -386,7 +386,7 @@ function executeInstructionCycle() {
     handleTimer();
 
     // Handle Devices
-    handleDevices();
+    deviceManager.handleDevices();
 
     // Update execution status and determine next instruction
     const statusResult = updateExecutionStatus();

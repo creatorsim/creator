@@ -45,7 +45,7 @@ import {
     InterruptManager,
 } from "./executor/InterruptManager.mts";
 import { init, compileArchitectureFunctions } from "./executor/executor.mjs";
-import { resetDevices } from "./executor/devices.mts";
+import { DeviceManager } from "./executor/DeviceManager.mts";
 import { compileTimerFunctions } from "./executor/timers.mts";
 import * as archProcessor from "./utils/architectureProcessor.mjs";
 import { writeDataDumpMemory32, writeDataDumpMemory64 } from "./assembler/sailAssembler/web/CNAssambler.mjs";
@@ -111,6 +111,8 @@ export let interruptManager;
 export function setInterruptManager(value) {
     interruptManager = value;
 }
+/** @type {DeviceManager} */
+export let deviceManager;
 /** @type {MemoryBackup} */
 export let main_memory_backup;
 export function updateMainMemoryBackup(value) {
@@ -220,6 +222,9 @@ export function loadArchitecture(architectureYaml, isa = []) {
         baseAddress: BigInt(minMemoryAddress),
         endianness: ENDIANNESSARR,
     });
+
+    // setup devices
+    deviceManager = new DeviceManager(architecture.devices ?? []);
 
     // Initialize stack tracker and other related components
     // This must happen before creating the register backup
@@ -437,7 +442,7 @@ export function reset() {
     interruptManager.reset();
 
     // reset devices
-    resetDevices();
+    deviceManager.resetDevices();
 
     // Initialize execution environment
     init();
@@ -687,7 +692,6 @@ export function setPC(value) {
 }
 
 export function updateCacheMem(index, type, addr, value) {
-    
     // Identificamps primero a que cache afecta
     // Despues comprobamos si ese bloque de cache ya existe
     // Si existe se reemplaza, sino se hace un push de una nueva línea

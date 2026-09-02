@@ -4379,10 +4379,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addi $rs, $rt, inm;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        add $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addi $rs, $rt, inm;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          add $rs, $rt, $at;
+        `
     - name: addi
       help: ""
       properties: []
@@ -4399,8 +4402,8 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |-
-        lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
+        lui $at, %hi(val);
+        ori $at, $at, %lo(val);
         add $reg1, $reg2, $at;
     - name: addiu
       help: ""
@@ -4418,8 +4421,8 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |-
-        lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
+        lui $at, %hi(val);
+        ori $at, $at, %lo(val);
         addu $reg1, $reg2, $at;
     - name: addu
       help: ""
@@ -4437,10 +4440,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addiu $rs, $rt, inm;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        addu $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addiu $rs, $rt, inm;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          addu $rs, $rt, $at;
+        `
     - name: and
       help: ""
       properties: []
@@ -4457,10 +4463,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){andi $rs, $rt, inm;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        and $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "andi $rs, $rt, inm;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          and $rs, $rt, $at;
+        `
     - name: andi
       help: ""
       properties: []
@@ -4477,8 +4486,8 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
+        lui $at, %hi(val);
+        ori $at, $at, %lo(val);
         and $rs, $rt, $at;
     - name: b
       help: ""
@@ -4955,10 +4964,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){addi $rd, $zero, addr;}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        add $rd, $zero, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "addi $rd, $zero, addr;"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          add $rd, $zero, $at;
+        `
     - name: lb
       help: ""
       properties: []
@@ -4971,10 +4983,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){lb $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        lb $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "lb $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          lb $rd, 0($at);
+        `
     - name: lbu
       help: ""
       properties: []
@@ -4987,10 +5002,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){lbu $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        lbu $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "lbu $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          lbu $rd, 0($at);
+        `
     - name: lh
       help: ""
       properties: []
@@ -5003,10 +5021,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){lh $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        lh $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "lh $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          lh $rd, 0($at);
+        `
     - name: lhu
       help: ""
       properties: []
@@ -5019,10 +5040,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){lhu $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        lhu $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "lhu $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          lhu $rd, 0($at);
+        `
     - name: li
       help: ""
       properties: []
@@ -5035,13 +5059,13 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |-
-        no_ret_op{tmp=Field.2.(31,0).int;
-        tmp_low=tmp&0x0000FFFF;
-        tmp_hi=tmp>>>16};
-        if(tmp_hi === 0){addi $rd, $zero, op{tmp_low};}
-        else{lui $at, op{tmp_hi};
-        ori $at, $at, op{tmp_low};
-        add $rd, $zero, $at;}
+        js:
+        if(args[1] !== null && (Number(args[1]) >>> 16) === 0) return `addi $rd, $zero, ${args[1]}`
+        return `
+          lui $at, %hi(val);
+          ori $at, $at, %lo(val);
+          add $rd, $zero, $at;
+        `
     - name: li.d
       help: ""
       properties: []
@@ -5054,24 +5078,24 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |-
-        no_ret_op{
-          tmp0=Field.2.(63,32).double;
-          tmp_low0=tmp0&0x0000FFFF;
-          tmp_hi0=tmp0>>>16;
-          tmp1=Field.2.(31,0).double;
-          tmp_low1=tmp1&0x0000FFFF;
-          tmp_hi1=tmp1>>>16;
-          tmp_reg=reg_name{1};
-          regNumber=parseInt(tmp_reg.substring(2), 10);
-          reg0="f" + regNumber;
-          reg1="f" + (regNumber + 1);
-        };
-        lui $at, op{tmp_hi1};
-        ori $at, $at, op{tmp_low1};
-        mtc1 $at, $op{reg1};
-        lui $at, op{tmp_hi0};
-        ori $at, $at, op{tmp_low0};
-        mtc1 $at, $op{reg0};
+        js:
+        let val = args[1];
+        if (val === null) throw "Forward references aren't allowed";
+        let [low, high] = CAPI.FP.float642uint(Number(val))
+
+        let reg = args[0];
+        let regNumber = parseInt(reg.substring(2), 10);
+        let reg0 ="f" + regNumber;
+        let reg1 ="f" + (regNumber + 1);
+        return `
+          lui $at, %hi(${low});
+          ori $at, $at, %lo(${low});
+          mtc1 $at, $${reg1};
+
+          lui $at, %hi(${high});
+          ori $at, $at, %lo(${high});
+          mtc1 $at, $${reg0};
+        `
     - name: li.s
       help: ""
       properties: []
@@ -5084,12 +5108,15 @@ pseudoinstructions:
         - field: val
           type: imm-signed
       definition: |-
-        no_ret_op{tmp=Field.2.(31,0).float;
-        tmp_low=tmp&0x0000FFFF;
-        tmp_hi=tmp>>>16};
-        lui $at, op{tmp_hi};
-        ori $at, $at, op{tmp_low};
-        mtc1 $at, $rd;
+        js:
+        let val = args[1];
+        if (val === null) throw "Forward references aren't allowed";
+        val = CAPI.FP.float322uint(Number(val))
+        return `
+          lui $at, %hi(${val});
+          ori $at, $at, %lo(${val});
+          mtc1 $at, $rd;
+        `
     - name: lw
       help: ""
       properties: []
@@ -5102,10 +5129,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){lw $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        lw $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "lw $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          lw $rd, 0($at);
+        `
     - name: move
       help: ""
       properties: []
@@ -5136,10 +5166,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addi $at, $zero, inm; mul $rs, $rt, $at;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        mul $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addi $at, $zero, inm; mul $rs, $rt, $at;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          mul $rs, $rt, $at;
+        `
     - name: nor
       help: ""
       properties: []
@@ -5156,10 +5189,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addi $at, $zero, inm; nor $rs, $rt, $at;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        nor $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addi $at, $zero, inm; nor $rs, $rt, $at;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          nor $rs, $rt, $at;
+        `
     - name: or
       help: ""
       properties: []
@@ -5176,10 +5212,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){ori $rs, $rt, inm;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        or $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "ori $rs, $rt, inm;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          or $rs, $rt, $at;
+        `
     - name: ori
       help: ""
       properties: []
@@ -5196,8 +5235,8 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
+        lui $at, %hi(inm);
+        ori $at, $at, %lo(inm);
         or $rs, $rt, $at;
     - name: rem
       help: ""
@@ -5297,10 +5336,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){sb $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        sb $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "sb $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          sb $rd, 0($at);
+        `
     - name: sh
       help: ""
       properties: []
@@ -5313,10 +5355,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){sh $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        sh $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "sh $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          sh $rd, 0($at);
+        `
     - name: sub
       help: ""
       properties: []
@@ -5333,10 +5378,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addi $at, $zero, inm; sub $rs, $rt, $at;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        sub $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addi $at, $zero, inm; sub $rs, $rt, $at;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          sub $rs, $rt, $at;
+        `
     - name: subu
       help: ""
       properties: []
@@ -5353,10 +5401,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){addi $at, $zero, inm; subu $rs, $rt, $at;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        subu $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "addi $at, $zero, inm; subu $rs, $rt, $at;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          subu $rs, $rt, $at;
+        `
     - name: sw
       help: ""
       properties: []
@@ -5369,10 +5420,13 @@ pseudoinstructions:
         - field: addr
           type: imm-signed
       definition: |-
-        if(Field.2.SIZE<=16){sw $rd, addr($zero);}
-        else{lui $at, Field.2.(31,16).int;
-        ori $at, $at, Field.2.(15,0).int;
-        sw $rd, 0($at);}
+        js:
+        if(CAPI.FP.check_int_size(args[1], 32, 16)) return "sw $rd, addr($zero);"
+        return `
+          lui $at, %hi(addr);
+          ori $at, $at, %lo(addr);
+          sw $rd, 0($at);
+        `
     - name: xor
       help: ""
       properties: []
@@ -5389,10 +5443,13 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        if(Field.3.SIZE<=16){xori $rs, $rt, inm;}
-        else{lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
-        xor $rs, $rt, $at;}
+        js:
+        if(CAPI.FP.check_int_size(args[2], 32, 16)) return "xori $rs, $rt, inm;"
+        return `
+          lui $at, %hi(inm);
+          ori $at, $at, %lo(inm);
+          xor $rs, $rt, $at;
+        `
     - name: xori
       help: ""
       properties: []
@@ -5409,8 +5466,8 @@ pseudoinstructions:
         - field: inm
           type: imm-signed
       definition: |-
-        lui $at, Field.3.(31,16).int;
-        ori $at, $at, Field.3.(15,0).int;
+        lui $at, %hi(inm);
+        ori $at, $at, %lo(inm);
         xor $rs, $rt, $at;
 directives:
   - name: .data
@@ -5452,6 +5509,16 @@ directives:
   - name: .align
     action: align
     size: null
+
+modifiers:
+  hi:
+    lower_signed: false
+    output_signed: false
+    range: [16, 32]
+  lo:
+    lower_signed: false
+    output_signed: false
+    range: [0, 16]
 
 memory_layout:
   text:

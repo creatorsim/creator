@@ -35,7 +35,7 @@
     "@uiw/codemirror-themes": "^4.25.1",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-web-links": "^0.11.0",
-    "ajv": "^8.17.1",
+    "ajv": "^8.20.0",
     "ansicolor": "^2.0.3",
     "bootstrap": "^5.3.8",
     "bootstrap-vue-next": "^0.40.6",
