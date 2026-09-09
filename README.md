@@ -591,7 +591,7 @@
   <h2 align="center">Developing CREATOR</h2>
 </div>
 
-See [`docs/dev.md`](https://github.com/creatorsim/creator/blob/master/docs/BUILD.md).
+See [`CREATOR Wiki - Development Guide`](https://creatorsim.github.io/creator-wiki/development/setup.html).
 
 
 
