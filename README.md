@@ -39,9 +39,10 @@
   
   |                              | URL                                             |
   |:----------------------------:|:-----------------------------------------------:|
-  | :clipboard:Source Code       | https://github.com/creatorsim/creator           |
+  | :clipboard: Source Code      | https://github.com/creatorsim/creator           |
   | :hammer: Assembler           | https://github.com/creatorsim/creator-assembler |
   | :microscope: Nightly Build   | https://github.com/creatorsim/creator-beta      |
+  | :memo: Checker               | https://github.com/creatorsim/creator-checker   |
   
   <h3 align="center">Supported Internet Browsers</h3>
   
