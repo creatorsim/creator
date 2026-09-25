@@ -2573,9 +2573,6 @@ instructions:
           value: "00000"
         - field: funct3
           value: "000"
-      preoperation: |
-        let result, rs1Number, rs2Number, type_rs1, type_rs2;
-        [rs1Number, type_rs1] = CAPI.ARCH.toJSNumberD(registers[rs1]);
       postoperation: |
         if (CAPI.FP.isNaN(result)) {
           registers[rd] = CAPI.ARCH.toBigInt(result, "NaN32");
@@ -2583,7 +2580,7 @@ instructions:
           registers[rd] = CAPI.ARCH.toBigInt(result, "NaNBfloat32_64");
         }
       definition: |
-        result = CAPI.FP.uint2float32(rs1Number);
+        result = CAPI.FP.uint2float32(registers[rs1]);
       help: Move the single-precision value encoded in IEEE 754-2008 standard
         encoding from the lower 32 bits of integer register rs1 to the
         floating-point register rd.
@@ -2601,16 +2598,10 @@ instructions:
           value: "000"
       preoperation: |
         let result, rs1Number, type_rs1;
-        [rs1Number, type_rs1] = CAPI.ARCH.toJSNumberD(registers[rs1]);
-      postoperation: |
-        if (CAPI.FP.isNaN(result)) {
-          registers[rd] = CAPI.ARCH.toBigInt(result, "NaN32");
-        } else {
-          registers[rd] = CAPI.ARCH.toBigInt(result, "NaNBfloat32_64");
-        }
-        registers[rs1] = CAPI.ARCH.toBigInt(rs1Number, type_rs1);
+        rs1Number = (registers[rs1] & 0x00000000FFFFFFFFn);
+        [rs1Number, type_rs1] = CAPI.ARCH.toJSNumberS(rs1Number);
       definition: |
-        result = CAPI.FP.float322uint(rs1Number);
+        registers[rd] = CAPI.FP.float322uint(rs1Number);
       help: Move the single-precision value in floating-point register rs1
         represented in IEEE 754-2008 encoding to the lower 32 bits of integer
         register rd.
