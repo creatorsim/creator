@@ -211,40 +211,40 @@ export default {
       // Vector size elem
       v_length: 64,
 
-      L1_I_num_lines : 32,
-      L1_D_num_lines : 32,
-      L1_num_lines : 32,
-      L2_num_lines : 32,
-      L2_I_num_lines : 32,
-      L2_D_num_lines : 32,
-      L1_size : 32,
-      L1_I_size : 32,
-      L1_D_size : 32,
-      L1_size_block : 32,
-      L1_I_size_block : 32,
-      L1_D_size_block : 32,
-      L2_size : 32,
-      L2_I_size : 32,
-      L2_D_size : 32,
-      L2_size_block : 32,
-      L2_I_size_block : 32,
-      L2_D_size_block : 32,
+      L1_I_num_lines: 32,
+      L1_D_num_lines: 32,
+      L1_num_lines: 32,
+      L2_num_lines: 32,
+      L2_I_num_lines: 32,
+      L2_D_num_lines: 32,
+      L1_size: 32,
+      L1_I_size: 32,
+      L1_D_size: 32,
+      L1_size_block: 32,
+      L1_I_size_block: 32,
+      L1_D_size_block: 32,
+      L2_size: 32,
+      L2_I_size: 32,
+      L2_D_size: 32,
+      L2_size_block: 32,
+      L2_I_size_block: 32,
+      L2_D_size_block: 32,
 
       // Cache architecture
-      cache_type : 0,
-      isDirect : 0,
-      
+      cache_type: 0,
+      isDirect: 0,
+
       // Cache Location
-      cache_location : "Associative",
+      cache_location: "Associative",
 
       // Cache policy
-      cache_policy : "FIFO",
+      cache_policy: "FIFO",
 
       // Execution run
-      execution_mode_run : -1,
-      
+      execution_mode_run: -1,
+
       // Is a breakpoint instruction
-      is_breakpoint : 0,
+      is_breakpoint: 0,
 
       // Integrated Kernel (exclusive to Sail Version)
       c_kernel: true,
@@ -263,7 +263,10 @@ export default {
 
       sidebar_mode: (a => {
         return a === null ? "show" : a;
-      })(localStorage.getItem("conf_sidebar_mode")) as "show" | "autohide" | "disable",
+      })(localStorage.getItem("conf_sidebar_mode")) as
+        | "show"
+        | "autohide"
+        | "disable",
 
       /*************************/
       /* Architecture Selector */
@@ -354,7 +357,7 @@ export default {
       target_port: "",
       target_location: "~/creator",
       flash_url: "http://localhost:8080",
-      
+
       /* Validation test */
       // Stats
       passed_test: 0,
@@ -391,7 +394,9 @@ export default {
     },
 
     showActivityBar(): boolean {
-      return ["architecture", "assembly", "simulator"].includes(this.creator_mode);
+      return ["architecture", "assembly", "simulator"].includes(
+        this.creator_mode,
+      );
     },
   },
 
@@ -536,8 +541,8 @@ export default {
       // load architecture
       const arch = arch_available.find(
         arch =>
-          arch.name === decodeURI(architecture_name) ||
-          arch.alias.includes(decodeURI(architecture_name)),
+          arch.name === architecture_name ||
+          arch.alias.includes(architecture_name),
       );
       if (arch === undefined) {
         show_notification(
@@ -560,7 +565,7 @@ export default {
 
       // load assembly code
       if (asm !== null) {
-        this.assembly_code = decodeURI(asm);
+        this.assembly_code = asm;
 
         // TODO: compile. It doesn't update the table execution, so...
         // this.$root.$refs.selectArchitectureView.$refs.toolbar.$refs.btngroup1
@@ -575,12 +580,7 @@ export default {
 
       // load example code
       if (desired_set !== null && desired_example !== null) {
-        loadExample(
-          arch.name,
-          decodeURI(desired_set),
-          decodeURI(desired_example),
-          this,
-        );
+        loadExample(arch.name, desired_set, desired_example, this);
       }
     },
 
@@ -699,174 +699,173 @@ export default {
 
   <div class="app-wrapper">
     <header>
-    <!-- Navbar  -->
-    <NavbarCREATOR
-      :version="version"
-      :architecture_name="architecture_name"
-      :creator_mode="creator_mode"
-      :browser="browser"
-      :os="os"
-      :dark="dark"
-      :dark-mode-setting="dark_mode_setting"
-      :arch_available="arch_available"
-      :instructions="instructions"
-      @mobile-view-change="handleMobileViewChange"
-      @update:dark-mode-setting="handleDarkModeSettingChange"
-      ref="navbar"
-    />
+      <!-- Navbar  -->
+      <NavbarCREATOR
+        :version="version"
+        :architecture_name="architecture_name"
+        :creator_mode="creator_mode"
+        :browser="browser"
+        :os="os"
+        :dark="dark"
+        :dark-mode-setting="dark_mode_setting"
+        :arch_available="arch_available"
+        :instructions="instructions"
+        @mobile-view-change="handleMobileViewChange"
+        @update:dark-mode-setting="handleDarkModeSettingChange"
+        ref="navbar"
+      />
 
-    <!-- Configuration modal -->
-    <SettingsModal
-      id="configuration"
-      :architecture_name="architecture_name"
-      v-model:arch_available="arch_available"
-      v-model:default_architecture="default_architecture"
-      v-model:autoscroll="autoscroll"
-      v-model:backup="backup"
-      v-model:notification_time="notification_time"
-      v-model:dark_mode_setting="dark_mode_setting"
-      v-model:c_debug="c_debug"
-      v-model:c_kernel="c_kernel"
-      v-model:vim_custom_keybinds="vim_custom_keybinds"
-      v-model:vim_mode="vim_mode"
-      v-model:reg_name_representation="reg_name_representation"
-      v-model:interrupt_handler="interrupt_handler"
-      v-model:sidebar_mode="sidebar_mode"
-    />
+      <!-- Configuration modal -->
+      <SettingsModal
+        id="configuration"
+        :architecture_name="architecture_name"
+        v-model:arch_available="arch_available"
+        v-model:default_architecture="default_architecture"
+        v-model:autoscroll="autoscroll"
+        v-model:backup="backup"
+        v-model:notification_time="notification_time"
+        v-model:dark_mode_setting="dark_mode_setting"
+        v-model:c_debug="c_debug"
+        v-model:c_kernel="c_kernel"
+        v-model:vim_custom_keybinds="vim_custom_keybinds"
+        v-model:vim_mode="vim_mode"
+        v-model:reg_name_representation="reg_name_representation"
+        v-model:interrupt_handler="interrupt_handler"
+        v-model:sidebar_mode="sidebar_mode"
+      />
 
-    <!-- Information modals -->
+      <!-- Information modals -->
 
-    <!-- Notification modal -->
-    <UIeltoNotifications id="notifications" :notifications="notifications" />
+      <!-- Notification modal -->
+      <UIeltoNotifications id="notifications" :notifications="notifications" />
 
-    <!-- Institutions modal -->
-    <UIeltoInstitutions id="institutions" />
+      <!-- Institutions modal -->
+      <UIeltoInstitutions id="institutions" />
 
-    <!-- Statistics modal -->
-    <UIeltoStatistics id="statistics" />
+      <!-- Statistics modal -->
+      <UIeltoStatistics id="statistics" />
 
-    <!-- About modal -->
-    <UIeltoAbout id="about" :dark="dark!" />
+      <!-- About modal -->
+      <UIeltoAbout id="about" :dark="dark!" />
 
-    <!-- Backup modal -->
-    <UIeltoBackup id="copy" @load-architecture="creator_mode = 'assembly'" />
-  </header>
-  <div class="app-body">
-    <ActivityBar
-      v-if="!isMobile && showActivityBar && sidebar_mode !== 'disable'"
-      v-model="creator_mode"
-      :dark="dark"
-      :autohide="sidebar_mode === 'autohide'"
-    />
-  <main class="main-view">
+      <!-- Backup modal -->
+      <UIeltoBackup id="copy" @load-architecture="creator_mode = 'assembly'" />
+    </header>
+    <div class="app-body">
+      <ActivityBar
+        v-if="!isMobile && showActivityBar && sidebar_mode !== 'disable'"
+        v-model="creator_mode"
+        :dark="dark"
+        :autohide="sidebar_mode === 'autohide'"
+      />
+      <main class="main-view">
+        <!-------------------->
+        <!-- Mobile Architecture Select -->
+        <!-------------------->
 
-  <!-------------------->
-  <!-- Mobile Architecture Select -->
-  <!-------------------->
+        <MobileArchitectureSelect
+          v-if="isMobile"
+          :arch_available="arch_available"
+          :dark="dark"
+          @select-architecture="
+            arch_name => {
+              architecture_name = arch_name;
+              creator_mode = 'simulator';
+              mobileView = 'code';
+            }
+          "
+          @architecture-deleted="handleArchitectureDeleted"
+        />
 
-  <MobileArchitectureSelect
-    v-if="isMobile"
-    :arch_available="arch_available"
-    :dark="dark"
-    @select-architecture="
-      arch_name => {
-        architecture_name = arch_name;
-        creator_mode = 'simulator';
-        mobileView = 'code';
-      }
-    "
-    @architecture-deleted="handleArchitectureDeleted"
-  />
+        <!----------------------->
+        <!-- Select architecture -->
+        <!----------------------->
 
-  <!----------------------->
-  <!-- Select architecture -->
-  <!----------------------->
+        <SelectArchitecture
+          v-if="!isMobile && creator_mode === 'select_architecture'"
+          :arch_available="arch_available"
+          :browser="browser!"
+          :os="os!"
+          :dark="dark!"
+          :window-height="windowHeight"
+          ref="selectArchitectureView"
+          @select-architecture="
+            arch_name => {
+              architecture_name = arch_name;
+              creator_mode = 'simulator';
+            }
+          "
+          @architecture-deleted="handleArchitectureDeleted"
+        />
 
-  <SelectArchitecture
-    v-if="!isMobile && creator_mode === 'select_architecture'"
-    :arch_available="arch_available"
-    :browser="browser!"
-    :os="os!"
-    :dark="dark!"
-    :window-height="windowHeight"
-    ref="selectArchitectureView"
-    @select-architecture="
-      arch_name => {
-        architecture_name = arch_name;
-        creator_mode = 'simulator';
-      }
-    "
-    @architecture-deleted="handleArchitectureDeleted"
-  />
+        <!------------------>
+        <!-- Architecture -->
+        <!------------------>
 
-  <!------------------>
-  <!-- Architecture -->
-  <!------------------>
+        <ArchitectureView
+          v-if="!isMobile && creator_mode === 'architecture'"
+          :architecture_name="architecture_name"
+          :arch_available="arch_available"
+          :arch_code="arch_code"
+          :browser="browser!"
+          :os="os!"
+          :dark="dark!"
+        />
 
-  <ArchitectureView
-    v-if="!isMobile && creator_mode === 'architecture'"
-    :architecture_name="architecture_name"
-    :arch_available="arch_available"
-    :arch_code="arch_code"
-    :browser="browser!"
-    :os="os!"
-    :dark="dark!"
-  />
+        <!------------------->
+        <!-- Assembly view -->
+        <!------------------->
 
-  <!------------------->
-  <!-- Assembly view -->
-  <!------------------->
+        <AssemblyView
+          v-if="!isMobile && creator_mode === 'assembly'"
+          :architecture_name="architecture_name"
+          :arch_available="arch_available"
+          :browser="browser!"
+          :os="os!"
+          :assembly_code="assembly_code"
+          :assembly_error="assemblyError"
+          :vim_mode="vim_mode"
+          :vim_custom_keybinds="vim_custom_keybinds"
+          :dark="dark!"
+          ref="assemblyView"
+        />
 
-  <AssemblyView
-    v-if="!isMobile && creator_mode === 'assembly'"
-    :architecture_name="architecture_name"
-    :arch_available="arch_available"
-    :browser="browser!"
-    :os="os!"
-    :assembly_code="assembly_code"
-    :assembly_error="assemblyError"
-    :vim_mode="vim_mode"
-    :vim_custom_keybinds="vim_custom_keybinds"
-    :dark="dark!"
-    ref="assemblyView"
-  />
+        <!-------------------->
+        <!-- Simulator view -->
+        <!-------------------->
 
-  <!-------------------->
-  <!-- Simulator view -->
-  <!-------------------->
-
-  <SimulatorView
-    v-if="!isMobile && creator_mode === 'simulator'"
-    ref="simulatorView"
-    :data_mode="data_mode"
-    :reg_name_representation="reg_name_representation"
-    :stat_representation="stat_representation"
-    :stat_type="stat_type"
-    :memory_segment="memory_segment"
-    :architecture_name="architecture_name"
-    :arch_available="arch_available"
-    :instructions="instructions"
-    :enter="enter"
-    :browser="browser!"
-    :os="os!"
-    :window-height="windowHeight"
-    :window-width="windowWidth"
-    :display="display"
-    :keyboard="keyboard"
-    :dark="dark!"
-    :autoscroll="autoscroll"
-    :key="simulatorViewKey + '-' + assemblyCompletedKey"
-    :callee_frame="callee_frame!"
-    :caller_frame="caller_frame!"
-    :assembly_code="assembly_code"
-    :lab_url="lab_url"
-    :result_email="result_email"
-    :target_board="target_board"
-    :target_port="target_port"
-    :target_location="target_location"
-    :flash_url="flash_url"
-  />
-    </main>
+        <SimulatorView
+          v-if="!isMobile && creator_mode === 'simulator'"
+          ref="simulatorView"
+          :data_mode="data_mode"
+          :reg_name_representation="reg_name_representation"
+          :stat_representation="stat_representation"
+          :stat_type="stat_type"
+          :memory_segment="memory_segment"
+          :architecture_name="architecture_name"
+          :arch_available="arch_available"
+          :instructions="instructions"
+          :enter="enter"
+          :browser="browser!"
+          :os="os!"
+          :window-height="windowHeight"
+          :window-width="windowWidth"
+          :display="display"
+          :keyboard="keyboard"
+          :dark="dark!"
+          :autoscroll="autoscroll"
+          :key="simulatorViewKey + '-' + assemblyCompletedKey"
+          :callee_frame="callee_frame!"
+          :caller_frame="caller_frame!"
+          :assembly_code="assembly_code"
+          :lab_url="lab_url"
+          :result_email="result_email"
+          :target_board="target_board"
+          :target_port="target_port"
+          :target_location="target_location"
+          :flash_url="flash_url"
+        />
+      </main>
     </div>
   </div>
 
