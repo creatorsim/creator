@@ -2,7 +2,7 @@ export const snapshot = {};
 
 snapshot[`riscv/correct/syscalls/test_riscv_syscall_001.s 1`] = `
 {
-  display: "667312034-56781316893491This is a string",
+  display: "667312034-56781066192077This is a string",
   error: false,
   keyboard: "",
   memory: {
