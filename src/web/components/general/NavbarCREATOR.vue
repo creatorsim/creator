@@ -32,7 +32,11 @@ import SentinelErrorsDropdown from "../simulator/SentinelErrorsDropdown.vue";
 import ThemeToggle from "./ThemeToggle.vue";
 import type { Instruction } from "@/core/assembler/assembler";
 import type { BDropdown } from "bootstrap-vue-next";
-import { coreEvents, CoreEventTypes, type SentinelErrorEvent } from "../../../core/events.mts";
+import {
+  coreEvents,
+  CoreEventTypes,
+  type SentinelErrorEvent,
+} from "../../../core/events.mts";
 import { remove_library, architecture, load_CREATino } from "@/core/core.mjs";
 import { createFile } from "../assembly/MultifileEditor.mjs";
 
@@ -142,7 +146,9 @@ export default defineComponent({
         return true;
       }
       // Check if CreatorAssembler is in the list
-      return assemblers.some((asm: any) => (asm.name === "CreatorAssembler" || asm.name === "Sail"));
+      return assemblers.some(
+        (asm: any) => asm.name === "CreatorAssembler" || asm.name === "Sail",
+      );
     },
 
     // Hide mobile navbar when selecting architecture
@@ -269,13 +275,14 @@ export default defineComponent({
       }
     },
     newAssembly() {
-      if (architecture.config.name.includes("SRV")){
+      if (architecture.config.name.includes("SRV")) {
         // Call modal to create new File
-        (this.$root as any).assembly_code = createFile((this.$root as any).assembly_code);
-      }else {
+        (this.$root as any).assembly_code = createFile(
+          (this.$root as any).assembly_code,
+        );
+      } else {
         (this.$root as any).assembly_code = "";
       }
-
     },
     removeLibrary() {
       remove_library();
@@ -333,14 +340,14 @@ export default defineComponent({
     <!-- Creator Dropdown Menu -->
     <b-navbar-nav class="creator-brand">
       <b-navbar-brand>
-        <img 
-          src="/public/img/logos/creator_small.webp" 
-          alt="Creator Simulator Logo" 
+        <img
+          src="/public/img/logos/creator_small.webp"
+          alt="Creator Simulator Logo"
           class="w-auto transition-transform hover:scale-105"
-          style="height: 3vh;"
+          style="height: 3vh"
         />
       </b-navbar-brand>
-      
+
       <b-nav-item-dropdown
         class="navMenu creator-menu"
         no-caret
@@ -466,6 +473,13 @@ export default defineComponent({
           <font-awesome-icon :icon="['fas', 'link']" class="me-2" /> Get code as
           URI...
         </b-dropdown-item>
+        <b-dropdown-item v-b-modal.load_uri>
+          <font-awesome-icon
+            :icon="['fas', 'arrow-up-right-from-square']"
+            class="me-2"
+          />
+          Load from URI...
+        </b-dropdown-item>
       </b-nav-item-dropdown>
 
       <!-- Architecture Menu (Architecture View)-->
@@ -510,16 +524,18 @@ export default defineComponent({
           <font-awesome-icon :icon="['fas', 'floppy-disk']" class="me-2" /> Save
           as Library...
         </b-dropdown-item>
-        <b-dropdown-item  v-if="architecture_name.includes('RV32')" @click="loadCREATino">
-          <font-awesome-icon :icon="['fas', 'infinity']" class="me-2" /> Add Arduino
-          Library
+        <b-dropdown-item
+          v-if="architecture_name.includes('RV32')"
+          @click="loadCREATino"
+        >
+          <font-awesome-icon :icon="['fas', 'infinity']" class="me-2" /> Add
+          Arduino Library
         </b-dropdown-item>
         <b-dropdown-divider />
         <b-dropdown-item @click="removeLibrary">
           <font-awesome-icon :icon="['fas', 'trash-can']" class="me-2" /> Remove
           Library...
         </b-dropdown-item>
-
       </b-nav-item-dropdown>
 
       <!-- Tools Menu (Simulator View) -->
