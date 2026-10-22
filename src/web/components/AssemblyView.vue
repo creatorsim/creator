@@ -25,6 +25,7 @@ import Examples from "./assembly/Examples.vue";
 import LoadAssembly from "./assembly/LoadAssembly.vue";
 import DownloadPopup from "./general/DownloadModal.vue";
 import MakeURI from "./assembly/MakeURI.vue";
+import LoadURI from "./assembly/LoadURI.vue";
 import LoadLibrary from "./assembly/LoadLibrary.vue";
 import SaveLibrary from "./assembly/SaveLibrary.vue";
 import LibraryTags from "./assembly/LibraryTags.vue";
@@ -56,6 +57,7 @@ export default defineComponent({
     LoadAssembly,
     DownloadPopup,
     MakeURI,
+    LoadURI,
     LoadLibrary,
     SaveLibrary,
     LibraryTags,
@@ -94,6 +96,9 @@ export default defineComponent({
       :architecture_name="architecture_name"
       :assembly_code="assembly_code"
     />
+
+    <!-- Load uri -->
+    <LoadURI id="load_uri" />
 
     <!-- Load binary form -->
     <LoadLibrary id="load_binary" />
