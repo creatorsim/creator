@@ -229,7 +229,13 @@ export const MEM = {
         if (hint) {
             try {
                 const sizeInBits = bytes * BYTESIZE;
-                memory.addHint(BigInt(address), [], hint, sizeInBits);
+                memory.addHint(
+                    BigInt(address),
+                    [],
+                    hint,
+                    sizeInBits,
+                    Number(value),
+                );
             } catch (e) {
                 raise(
                     "Failed to add hint for address '0x" +
@@ -336,12 +342,17 @@ export const MEM = {
      * @param sizeInBits Optional size of the type in bits (e.g., `64` for double, `32` for int32)
      * @returns `true` if the hint was successfully added, else `false`
      */
-    addHint(address: bigint, hint: string, sizeInBits?: number): boolean {
+    addHint(
+        address: bigint,
+        hint: string,
+        sizeInBits?: number,
+        value?: number,
+    ): boolean {
         // get memory
         const memory = selectMemory(address);
 
         try {
-            memory.addHint(address, [], hint, sizeInBits);
+            memory.addHint(address, [], hint, sizeInBits, value);
             return true;
         } catch (e) {
             raise(

@@ -227,7 +227,13 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                         );
 
                         const floatType = "float32";
-                        main_memory.addHint(addr, labels, floatType, 32);
+                        main_memory.addHint(
+                            addr,
+                            labels,
+                            floatType,
+                            32,
+                            data.value(true),
+                        );
                         break;
                     }
                     case "double": {
@@ -248,7 +254,13 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                         );
 
                         const doubleType = "float64";
-                        main_memory.addHint(addr, labels, doubleType, 64);
+                        main_memory.addHint(
+                            addr,
+                            labels,
+                            doubleType,
+                            64,
+                            data.value(true),
+                        );
                         break;
                     }
                     case "byte": {
@@ -256,7 +268,13 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                         main_memory.write(addr, byteValue);
 
                         const byteType = "byte";
-                        main_memory.addHint(addr, labels, byteType, 8);
+                        main_memory.addHint(
+                            addr,
+                            labels,
+                            byteType,
+                            8,
+                            data.value(true),
+                        );
                         break;
                     }
                     case "word":
@@ -288,6 +306,7 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                                 labels,
                                 wordType,
                                 newArchitecture.config.word_size,
+                                data.value(true),
                             );
                         }
                         break;
@@ -339,7 +358,13 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                         );
 
                         const dwordType = "dword";
-                        main_memory.addHint(addr, labels, dwordType, 64);
+                        main_memory.addHint(
+                            addr,
+                            labels,
+                            dwordType,
+                            64,
+                            data.value(true),
+                        );
                         break;
                     }
 
@@ -365,7 +390,13 @@ function loadDataIntoMemory(data_mem, wasmModules) {
                         main_memory.write(addr + 1n, orderedBytes[1]);
 
                         const halfType = "half";
-                        main_memory.addHint(addr, labels, halfType, 16);
+                        main_memory.addHint(
+                            addr,
+                            labels,
+                            halfType,
+                            16,
+                            data.value(true),
+                        );
                         break;
                     }
                     default: {
