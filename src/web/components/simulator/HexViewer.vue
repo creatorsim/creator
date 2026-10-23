@@ -65,7 +65,13 @@ export default defineComponent({
       viewMode: "hex" as "hex" | "ascii",
       hintMap: new Map<
         number,
-        { tag: string; type: string; sizeInBits?: number; colorIndex: number }
+        {
+          tag: string;
+          type: string;
+          sizeInBits?: number;
+          value?: number;
+          colorIndex: number;
+        }
       >(),
       hintTooltip: null as HTMLElement | null,
       showAllTags: true,
@@ -511,6 +517,7 @@ export default defineComponent({
         tag: h.tag,
         type: h.type || "",
         sizeInBits: h.sizeInBits,
+        value: h.value,
       }));
 
       // Add instruction hints from loaded instructions
@@ -617,6 +624,7 @@ export default defineComponent({
             tag: hint.tag.join(", "),
             type: hint.type,
             sizeInBits: hint.sizeInBits,
+            value: hint.value,
             colorIndex: hintColorIndex,
           });
         }
@@ -970,6 +978,29 @@ export default defineComponent({
         details.className = "hint-details";
         details.textContent = `Size: ${hintInfo.sizeInBits} bits (${Math.ceil(hintInfo.sizeInBits / 8)} bytes)`;
         tooltip.appendChild(details);
+      }
+
+      if (hintInfo.value) {
+        if (
+          hintInfo.type === "byte" ||
+          hintInfo.type === "half" ||
+          hintInfo.type === "word"
+        ) {
+          const signedDetails = document.createElement("div");
+          signedDetails.className = "hint-details";
+          signedDetails.textContent = `Signed Value: ${hintInfo.value | 0}`;
+          tooltip.appendChild(signedDetails);
+
+          const unsignedDetails = document.createElement("div");
+          unsignedDetails.className = "hint-details";
+          unsignedDetails.textContent = `Unsigned Value: ${hintInfo.value}`;
+          tooltip.appendChild(unsignedDetails);
+        } else {
+          const details = document.createElement("div");
+          details.className = "hint-details";
+          details.textContent = `Value: ${hintInfo.value}`;
+          tooltip.appendChild(details);
+        }
       }
 
       document.body.appendChild(tooltip);
